@@ -1,0 +1,2 @@
+class WorkoutLog < ApplicationRecord
+end

@@ -1,0 +1,31 @@
+<h1>筋トレ記録（Rails 8 新ポートフォリオ）</h1>
+<p>ゲリ</p>
+<p>ラスタ</p>
+
+<%= form_with model: WorkoutLog.new do |f| %>
+
+  <div>
+    <%= f.label :workout_date, "トレーニング日：" %>
+    <%= f.date_field :workout_date, value: Time.zone.today %>
+  </div>
+
+  <div>
+    <%= f.label :menu_type, "種目名：" %>
+    <%= f.text_field :menu_type, placeholder: "例：ベンチプレス" %>
+  </div>
+
+  <div>
+    <%= f.label :weight, "重量 (kg)：" %>
+    <%= f.number_field :weight, step: 0.1, placeholder: "例：83.0" %>
+  </div>
+
+  <div>
+    <%= f.label :reps, "回数 (Reps)：" %>
+    <%= f.number_field :reps, placeholder: "例：1" %>
+  </div>
+
+  <div>
+    <%= f.submit "筋肉を記録する！" %>
+  </div>
+
+<% end %>
