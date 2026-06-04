@@ -2,6 +2,12 @@
 <p>開発中</p>
 <p>です</p>
 
+    <% flash.each do |name, msg| %>
+      <div class="flash-message <%= name %>"style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 12px; margin: 15px 0; border-radius: 6px; font-weight: bold; text-align: center;">
+        <%= msg %>
+      </div>
+    <% end %>
+
 <%= form_with model: @workout_log do |f| %>
 
   <div>
