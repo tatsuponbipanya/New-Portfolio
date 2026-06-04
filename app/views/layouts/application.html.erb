@@ -23,6 +23,13 @@
   </head>
 
   <body>
+    <%# 全てのページでflashが使えるようにする。%>
+    <% flash.each do |name, msg| %>
+      <div class="flash-message <%= name %>">
+        <%= msg %>
+      </div>
+    <% end %>
+
     <%= yield %>
   </body>
 </html>
