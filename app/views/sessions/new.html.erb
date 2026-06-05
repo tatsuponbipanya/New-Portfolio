@@ -1,0 +1,15 @@
+<h1 class="text-2xl font-bold mb-4">ログイン</h1>
+
+<%= form_with url: login_path, local: true do |f| %>
+  <div class="mb-4">
+    <%= f.label :email, "メールアドレス" %>
+    <%= f.email_field :email, class:  "border border-slate-300 rounded px-3 py-2 w-full" %>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :password, "パスワード：" %>
+    <%= f.password_field :password, class: "border border-slate-300 rounded px-3 py-2 w-full" %>
+  </div>
+
+  <%= f.submit "ログインする", class: "bg-blue-600 text-white font-bold px-4 py-2 rounded" %>
+<% end %>

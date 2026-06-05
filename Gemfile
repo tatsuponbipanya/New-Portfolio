@@ -21,4 +21,7 @@ group :development, :test do
 
   # 日本の自社開発企業のシェアNo.1テストツール
   gem "rspec-rails"
+
+  #最強のパスワード暗号化（ハッシュ化）
+  gem 'bcrypt', '~> 3.1.7'
 end
