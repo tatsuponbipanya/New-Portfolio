@@ -17,7 +17,7 @@ class HomeController < ApplicationController
     else
       @workout_logs = WorkoutLog.order(workout_date: :desc)
       render :index, status: :unprocessable_entity
-      #status: :unprocessable_entityで422 (リクエストは届いたけど、データがダメで処理できない）を明治しないと、
+      #status: :unprocessable_entityで422 (リクエストは届いたけど、データがダメで処理できない）を明示しないと、
       #Hotwire（Turbo）が正常にエラー画面をレンダリングしてくれずバグの原因になる
     end
   end
