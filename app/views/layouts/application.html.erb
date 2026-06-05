@@ -20,8 +20,10 @@
 
   <body>
     <header class="flex justify-between items-center p-5 border-b">
-      <h1 class="text-xl font-bold">筋トレ記録アプリ</h1>
-      
+      <%# ログインしているなら root_path(記録一覧)、していないなら root_path(landing) に飛ぶ %>
+      <%= link_to root_path, class: "text-2xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500 font-mono" do %>
+        MUSCLE_LOG
+      <% end %>
       <div class="flex items-center gap-3">
         <% if current_user %>
           <p><%= current_user.name %> さんこんにちは！</p>
@@ -33,6 +35,13 @@
     </header>
 
     <main class="container mx-auto mt-10 px-5 max-w-2xl flex flex-col">
+      <%# フラッシュメッセージの表示を追加 %>
+      <% flash.each do |name, msg| %>
+        <div class="mb-4 p-4 rounded-md font-bold text-center <%= name == 'alert' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' %>">
+          <%= msg %>
+        </div>
+      <% end %>
+
       <%# ここが各ページのメインの中身が入るところ。 %>
       <%= yield %>
     </main>

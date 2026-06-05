@@ -1,12 +1,6 @@
 <h1 class="text-3xl font-bold text-slate-800 mb-2">筋トレ記録（Rails 8 新ポートフォリオ）</h1>
 <p class="text-sm text-gray-500 mb-6">開発中です</p>
 
-<% flash.each do |name, msg| %>
-  <div class="flash-message <%= name %> bg-green-100 border border-green-300 text-green-800 px-4 py-3 my-4 rounded-md font-bold text-center">
-    <%= msg %>
-  </div>
-<% end %>
-
 <% #入力エラーがあればエラーメッセージ表示 %>
 <% if @workout_log && @workout_log.errors.any? %>
   <div class="error-messages bg-red-50 border border-red-200 text-red-800 p-4 my-4 rounded-md">

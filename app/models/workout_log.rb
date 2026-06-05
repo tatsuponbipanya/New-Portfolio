@@ -1,4 +1,7 @@
 class WorkoutLog < ApplicationRecord
+    #記録は必ず一人のユーザーに属している
+    belongs_to :user
+
     validates :menu_type, presence: true
     #数字で（ニューメリキャリティ）、0以上の場合のみ許可
     validates :weight, numericality: { greater_than_or_equal_to: 0 }

@@ -1,21 +1,30 @@
 class HomeController < ApplicationController
+  # ログインしていなかったら、ログイン画面へリダイレクト
+  before_action :require_login
+  # ただし、トップページのみは表示可能
+  skip_before_action :require_login, only: [:index]
 
   def index
-    # 新しく記録するための空のインスタンス作成（入力フォームの準備に必要）
-    @workout_log = WorkoutLog.new
-    # 過去の記録を表示する
-    @workout_logs = WorkoutLog.order(workout_date: :desc)
+    if current_user
+      # 新しく記録するための空のインスタンス作成（入力フォームの準備に必要）
+      @workout_log = WorkoutLog.new
+      # その人の記録だけ表示
+      @workout_logs = current_user.workout_logs.order(workout_date: :desc)
+    else
+      # ログインしてない場合は、トップページへ
+      render :landing
+    end
   end
 
   def create
     # 入力されたデータを入れてインスタンス作成
-    @workout_log = WorkoutLog.new(workout_log_params)
+    @workout_log = current_user.workout_logs.build(workout_log_params)
     #workout_log_paramsは、privateで設定したセキュリティチェックの済んだデータ。
 
     if @workout_log.save
       redirect_to root_path, notice: "筋肉が記録されました。"
     else
-      @workout_logs = WorkoutLog.order(workout_date: :desc)
+      @workout_logs = current_user.workout_logs.order(workout_date: :desc)
       render :index, status: :unprocessable_entity
       #status: :unprocessable_entityで422 (リクエストは届いたけど、データがダメで処理できない）を明示しないと、
       #Hotwire（Turbo）が正常にエラー画面をレンダリングしてくれずバグの原因になる
