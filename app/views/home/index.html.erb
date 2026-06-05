@@ -10,7 +10,7 @@
 <% #入力エラーがあればエラーメッセージ表示 %>
 <% if @workout_log && @workout_log.errors.any? %>
   <div class="error-messages bg-red-50 border border-red-200 text-red-800 p-4 my-4 rounded-md">
-    <p class="font-bold mb-2">⚠️ 入力内容に間違いがあります：</p>
+    <p class="font-bold mb-2">⚠️ 入力内容を確認してください：</p>
     <ul class="list-disc pl-5 space-y-1 font-bold">
       <% @workout_log.errors.full_messages.each do |message| %>
         <li><%= message %></li>
