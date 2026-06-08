@@ -31,6 +31,12 @@ class HomeController < ApplicationController
     end
   end
 
+  def destroy
+    @workout_log = current_user.workout_logs.find(params[:id])
+    @workout_log.destroy
+    redirect_to root_path, notice: "筋トレ記録を削除しました。"
+  end
+
   private
   #カプセル化（隠蔽）。外からURL（インターネット）経由で呼び出せないメソッド。
   #ハッカーがURLの入力を工夫して、以下のメソッドを直接狙い撃ちしてきても無効に出来る。

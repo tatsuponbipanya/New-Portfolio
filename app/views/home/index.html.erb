@@ -54,6 +54,7 @@
           <th class="p-3">種目名</th>
           <th class="p-3">重量 (kg)</th>
           <th class="p-3">回数 (Reps)</th>
+          <th class="p-3">操作</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-100">
@@ -63,6 +64,11 @@
             <td class="p-3 text-blue-600"><%= log.menu_type %></td>
             <td class="p-3 text-slate-800"><%= log.weight %> kg</td>
             <td class="p-3 text-slate-800"><%= log.reps %> 回</td>
+            <td class="p-3">
+              <%= button_to "削除", workout_log_path(log), method: :delete, 
+                            onclick: "return confirm('本当にこの筋トレ記録を削除して良いですか？');", 
+                            class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-3 rounded text-xs cursor-pointer transition" %>
+            </td>
           </tr>
         <% end %>
       </tbody>
