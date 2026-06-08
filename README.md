@@ -1,24 +1,21 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## アプリケーションURL
+https://new-portfolio-eqo4.onrender.com/
 
-Things you may want to cover:
+## 🛠️ 使用技術（テックスタック）
 
-* Ruby version
+### 💻 バックエンド / フロントエンド
+* **Ruby** 3.2.10
+* **Ruby on Rails** 8.1.3
+  * 認証機能: `bcrypt` (has_secure_password)
+* **CSSフレームワーク**: Tailwind CSS
 
-* System dependencies
+### 🗄️ データベース
+* **開発環境**: SQLite3
+* **本番環境**: PostgreSQL
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### 🚀 インフラ / 💡 開発ツール
+* **ホスティング**: Render
+* **バージョン管理**: GitHub
+* **テスト / デバッグ**: RSpec, debug gem
