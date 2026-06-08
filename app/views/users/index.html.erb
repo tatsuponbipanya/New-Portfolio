@@ -1,0 +1,31 @@
+<h1 class="text-3xl font-bold text-slate-800 mb-6 text-center">🏋️‍♂️ 筋トレ仲間一覧</h1>
+
+<div class="users-list bg-white rounded shadow p-4 overflow-x-auto">
+  <table class="w-full border-collapse text-left font-bold">
+    <thead>
+      <tr class="bg-slate-100 border-b-2 border-slate-200 text-slate-700">
+        <th class="p-3">ユーザー名</th>
+        <th class="p-3">自己紹介</th>
+        <th class="p-3">詳細</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <% @users.each do |user| %>
+        <tr class="hover:bg-slate-50 transition duration-150">
+          <%# 👤 ユーザー名 %>
+          <td class="p-3 text-slate-800 font-bold"><%= user.name %></td>
+          
+          <%# 自己紹介（長すぎると表が崩れるから truncate 1行に省略） %>
+          <td class="p-3 text-slate-600 font-medium max-w-xs truncate">
+            <%= user.introduction.present? ? user.introduction : "自己紹介はまだ未設定です" %>
+          </td>
+          
+          <%# その人のマイページへ飛ぶリンクボタン %>
+          <td class="p-3">
+            <%= link_to "プロフィールを見る", user_path(user), class: "inline-block bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100 font-bold py-1 px-3 rounded text-xs transition" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

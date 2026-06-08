@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   get 'signup', to: 'users#new'
   post 'users', to: 'users#create'
 
+  # ユーザー一覧ページ
+  # 必ず（users/:id）より上に書く！
+  get 'users', to: "users#index"
+
   # プロフィール編集・更新
   get 'users/:id/edit', to: 'users#edit', as: :edit_user
   patch 'users/:id', to: 'users#update', as: :user

@@ -3,6 +3,10 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
+  def index
+    @users = User.all
+  end
+
   def create
     # user_paramsは下で定義したメソッド。登録データがちゃんとあるか
     @user = User.new(user_params)

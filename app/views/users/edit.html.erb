@@ -1,32 +1,30 @@
-<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-  <h1 class="text-2xl font-bold mb-6 text-center">プロフィール編集</h1>
+<h1 class="text-2xl font-bold mb-6 text-center text-slate-800">プロフィール編集</h1>
 
-  <%= form_with(model: @user, local: true) do |f| %>
-    
-    <%# エラーメッセージの表示 %>
-    <% if @user.errors.any? %>
-      <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-        <ul>
-          <% @user.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-
-    <%# ユーザー名入力 %>
-    <div class="mb-4">
-      <%= f.label :name, "ユーザー名", class: "block font-bold mb-1" %>
-      <%= f.text_field :name, class: "w-full p-2 border rounded" %>
+<%= form_with(model: @user, local: true) do |f| %>
+  
+  <%# エラーメッセージの表示 %>
+  <% if @user.errors.any? %>
+    <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
     </div>
-
-    <%# 自己紹介入力欄 %>
-    <div class="mb-4">
-      <%= f.label :introduction, "自己紹介文", class: "block font-bold mb-1" %>
-      <%= f.text_area :introduction, rows: 4, class: "w-full p-2 border rounded", placeholder: "自己紹介やベンチプレス等の目標を書いてね！" %>
-    </div>
-
-    <%# 更新ボタン %>
-    <%= f.submit "プロフィールを更新する", class: "w-full bg-blue-500 text-white font-bold p-2 rounded hover:bg-blue-600 cursor-pointer" %>
   <% end %>
-</div>
+
+  <%# ユーザー名入力 %>
+  <div class="mb-4 font-bold">
+    <%= f.label :name, "ユーザー名", class: "block font-bold mb-1" %>
+    <%= f.text_field :name, class: "w-full p-2 border rounded" %>
+  </div>
+
+  <%# 自己紹介入力欄 %>
+  <div class="mb-4 font-bold">
+    <%= f.label :introduction, "自己紹介文", class: "block font-bold mb-1" %>
+    <%= f.text_area :introduction, rows: 4, class: "w-full p-2 border rounded", placeholder: "自己紹介やベンチプレス等の目標を書いてね！" %>
+  </div>
+
+  <%# 更新ボタン %>
+  <%= f.submit "プロフィールを更新する", class: "block w-full bg-blue-500 text-white font-bold p-2 rounded hover:bg-blue-600 cursor-pointer max-w-md mx-auto" %>
+<% end %>

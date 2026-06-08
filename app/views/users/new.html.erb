@@ -1,4 +1,4 @@
-<h1 class="text-2xl font-bold mb-5">新規登録</h1>
+<h1 class="text-2xl font-bold mb-5 text-slate-800">新規登録</h1>
 
 <%# エラー表示 %>
 <% if @user.errors.any? %>
@@ -11,22 +11,22 @@
   </div>
 <% end %>
 
-<%= form_with model: @user, class: "space-y-4 max-w-sm" do |f| %>
+<%= form_with model: @user, class: "space-y-4 max-w-sm pb-16" do |f| %>
   <div>
-    <%= f.label :name, "名前：" %>
-    <%= f.text_field :name, class: "border p-2 w-full" %>
+    <%= f.label :name, "名前：", class: "font-bold text-slate-700" %>
+    <%= f.text_field :name, class: "border p-2 w-full rounded" %>
   </div>
   <div>
-    <%= f.label :email, "メール：" %>
-    <%= f.email_field :email, class: "border p-2 w-full" %>
+    <%= f.label :email, "メール：", class: "font-bold text-slate-700" %>
+    <%= f.email_field :email, class: "border p-2 w-full rounded" %>
   </div>
   <div>
-    <%= f.label :password, "パスワード：" %>
-    <%= f.password_field :password, class: "border p-2 w-full" %>
+    <%= f.label :password, "パスワード：", class: "font-bold text-slate-700" %>
+    <%= f.password_field :password, class: "border p-2 w-full rounded" %>
   </div>
   <div>
-    <%= f.label :password_confirmation, "パスワード（確認）：" %>
-    <%= f.password_field :password_confirmation, class: "border p-2 w-full" %>
+    <%= f.label :password_confirmation, "パスワード（確認）：", class: "font-bold text-slate-700" %>
+    <%= f.password_field :password_confirmation, class: "border p-2 w-full rounded" %>
   </div>
-  <%= f.submit "登録する", class: "bg-blue-600 text-white px-4 py-2 rounded" %>
+  <%= f.submit "登録する", class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-bold cursor-pointer transition" %>
 <% end %>
