@@ -1,17 +1,52 @@
-<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-  <h1 class="text-2xl font-bold mb-6 text-center">プロフィール詳細</h1>
+<h1 class="text-2xl font-bold mb-6 text-center text-slate-800">プロフィール詳細</h1>
 
-  <div class="mb-4 border-b pb-2">
-    <p class="text-gray-600 text-sm">ユーザー名</p>
-    <p class="text-xl font-bold"><%= @user.name %></p>
-  </div>
+<div class="mb-4 border-b pb-2 font-bold">
+  <p class="text-gray-600 text-sm">ユーザー名</p>
+  <p class="text-xl font-bold"><%= @user.name %></p>
+</div>
 
-  <%# 自己紹介文の表示エリア %>
-  <div class="mb-6">
-    <p class="text-gray-600 text-sm">自己紹介文</p>
-    <div class="mt-1 p-3 bg-gray-50 rounded border text-gray-800 whitespace-pre-wrap"><%= @user.introduction.present? ? @user.introduction : "自己紹介はまだ未設定です" %></div>
-  </div>
+<%# 自己紹介文の表示エリア %>
+<div class="mb-6 font-bold">
+  <p class="text-gray-600 text-sm">自己紹介文</p>
+  <div class="mt-1 p-3 bg-gray-50 rounded border text-gray-800 whitespace-pre-wrap w-full"><%= @user.introduction.present? ? @user.introduction : "自己紹介はまだ未設定です" %></div>
+</div>
 
-  <%# 編集画面へ戻るためのリンクボタン %>
-  <%= link_to "プロフィールを編集する", edit_user_path(@user), class: "block text-center bg-gray-500 text-white font-bold p-2 rounded hover:bg-gray-600" %>
+<%# 編集画面へ戻るためのリンクボタン %>
+<%= link_to "プロフィールを編集する", edit_user_path(@user), class: "block text-center bg-gray-500 text-white font-bold p-2 rounded hover:bg-gray-600 max-w-md mx-auto" %>
+
+<% #区切り線 %>
+<hr class="my-10 border-0 border-t-2 border-dashed border-slate-300">
+
+<h2 class="text-xl font-bold text-slate-800 mb-4">🏋️‍♂️ 過去の筋トレ記録一覧</h2>
+<div class="workout-logs-list overflow-x-auto bg-white rounded shadow p-4">
+  <% if @workout_logs && @workout_logs.any? %>
+    <table class="w-full border-collapse text-left font-bold">
+      <thead>
+        <tr class="bg-slate-100 border-b-2 border-slate-200 text-slate-700">
+          <th class="p-3">日付</th>
+          <th class="p-3">種目名</th>
+          <th class="p-3">重量 (kg)</th>
+          <th class="p-3">回数 (Reps)</th>
+          <th class="p-3">操作</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <% @workout_logs.each do |log| %>
+          <tr class="hover:bg-slate-50 transition duration-150">
+            <td class="p-3 text-slate-600"><%= log.workout_date.strftime("%Y/%m/%d %H:%M") %></td>
+            <td class="p-3 text-blue-600"><%= log.menu_type %></td>
+            <td class="p-3 text-slate-800"><%= log.weight %> kg</td>
+            <td class="p-3 text-slate-800"><%= log.reps %> 回</td>
+            <td class="p-3">
+              <%= button_to "削除", workout_log_path(log), method: :delete, 
+                            onclick: "return confirm('本当にこの筋トレ記録を削除して良いですか？');", 
+                            class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-3 rounded text-xs cursor-pointer transition" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-slate-500 italic">まだ記録がありません。</p>
+  <% end %>
 </div>

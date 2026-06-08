@@ -17,6 +17,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @workout_logs = @user.workout_logs.order(workout_date: :desc)
   end
 
   def edit

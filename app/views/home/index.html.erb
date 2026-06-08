@@ -1,5 +1,5 @@
-<h1 class="text-3xl font-bold text-slate-800 mb-2">筋トレ記録（Rails 8 新ポートフォリオ）</h1>
-<p class="text-sm text-gray-500 mb-6">開発中です</p>
+<h1 class="text-3xl font-bold text-slate-800 mb-2">筋トレを記録しよう！</h1>
+<p class="text-sm text-gray-500 mb-6">※開発中です</p>
 
 <% #入力エラーがあればエラーメッセージ表示 %>
 <% if @workout_log && @workout_log.errors.any? %>
@@ -14,16 +14,16 @@
 <% end %>
 
 <% #データ入力用フォーム %>
-<%= form_with model: @workout_log, class: "space-y-4 max-w-md" do |f| %>
+<%= form_with model: @workout_log, class: "space-y-4 max-w-md pb-16" do |f| %>
   <div class="flex flex-col">
-    <%= f.label :workout_date, "トレーニング日：", class: "font-bold text-slate-700 mb-1" %>
-    <%= f.date_field :workout_date, value: Time.zone.today, class: "border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    <%= f.label :workout_date, "トレーニング日時：", class: "font-bold text-slate-700 mb-1" %>
+    <%= f.datetime_field :workout_date, value: Time.current.change(sec: 0), step: 60, class: "border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500" %>
   </div>
 
   <div class="flex flex-col">
     <%= f.label :menu_type, "種目名：", class: "font-bold text-slate-700 mb-1" %>
     <%= f.select :menu_type, [["ベンチプレス", "ベンチプレス"], ["チンニング", "チンニング"],  ["スクワット", "スクワット"], ["ディップス", "ディップス"], ["ハンマーカール", "ハンマーカール"], ["サイドレイズ", "サイドレイズ"], ["デッドリフト", "デッドリフト"]],
-     { prompt: "種目を選択" }, { class: "border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" } %>
+       { prompt: "種目を選択" }, { class: "border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" } %>
   </div>
 
   <div class="flex flex-col">
@@ -40,40 +40,3 @@
     <%= f.submit "筋肉を記録する！", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded shadow-md cursor-pointer transition duration-200" %>
   </div>
 <% end %>
-
-<% #区切り線 %>
-<hr class="my-10 border-0 border-t-2 border-dashed border-slate-300">
-
-<h2 class="text-xl font-bold text-slate-800 mb-4">🏋️‍♂️ 過去の筋トレ記録一覧</h2>
-<div class="workout-logs-list overflow-x-auto">
-  <% if @workout_logs && @workout_logs.any? %>
-    <table class="w-full border-collapse text-left font-bold">
-      <thead>
-        <tr class="bg-slate-100 border-b-2 border-slate-200 text-slate-700">
-          <th class="p-3">日付</th>
-          <th class="p-3">種目名</th>
-          <th class="p-3">重量 (kg)</th>
-          <th class="p-3">回数 (Reps)</th>
-          <th class="p-3">操作</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-100">
-        <% @workout_logs.each do |log| %>
-          <tr class="hover:bg-slate-50 transition duration-150">
-            <td class="p-3 text-slate-600"><%= log.workout_date.strftime("%Y/%m/%d") %></td>
-            <td class="p-3 text-blue-600"><%= log.menu_type %></td>
-            <td class="p-3 text-slate-800"><%= log.weight %> kg</td>
-            <td class="p-3 text-slate-800"><%= log.reps %> 回</td>
-            <td class="p-3">
-              <%= button_to "削除", workout_log_path(log), method: :delete, 
-                            onclick: "return confirm('本当にこの筋トレ記録を削除して良いですか？');", 
-                            class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-3 rounded text-xs cursor-pointer transition" %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <p class="text-slate-500 italic">まだ記録がありません。</p>
-  <% end %>
-</div>

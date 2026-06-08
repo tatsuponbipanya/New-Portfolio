@@ -22,7 +22,7 @@ class HomeController < ApplicationController
     #workout_log_paramsは、privateで設定したセキュリティチェックの済んだデータ。
 
     if @workout_log.save
-      redirect_to root_path, notice: "筋肉が記録されました。"
+      redirect_to user_path(current_user), notice: "筋肉が記録されました。"
     else
       @workout_logs = current_user.workout_logs.order(workout_date: :desc)
       render :index, status: :unprocessable_entity
@@ -34,7 +34,7 @@ class HomeController < ApplicationController
   def destroy
     @workout_log = current_user.workout_logs.find(params[:id])
     @workout_log.destroy
-    redirect_to root_path, notice: "筋トレ記録を削除しました。"
+    redirect_to user_path(current_user), notice: "筋トレ記録を削除しました。"
   end
 
   private

@@ -25,8 +25,14 @@
         MUSCLE_LOG
       <% end %>
       
-      <div class="flex items-center gap-3">
+      <%# 横並びのアイテム同士の隙間を gap-4 に広げて、見やすくする %>
+      <div class="flex items-center gap-4">
         <% if current_user %>
+          <%# ログイン中のユーザー名を常時表示するネームタグ %>
+          <p class="text-sm font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
+            👤 <span class="text-slate-800 font-extrabold"><%= current_user.name %></span> さんいらっしゃい！
+          </p>
+
           <%# Alpine.js を使ったプルダウンメニュー %>
           <div x-data="{ open: false }" class="relative" @click.away="open = false">
             <%# ボタン部分 %>
@@ -34,11 +40,12 @@
               メニュー ▾
             </button>
 
-            <%# プルダウンの中身（open が true のときだけ浮き出て表示される） %>
+            <%# プルダウンの中身 %>
             <div x-show="open" 
                  x-transition
                  class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-md shadow-lg py-1 z-50 font-bold text-sm" 
                  style="display: none;">
+              <%= link_to "筋トレを記録する！", root_path, class: "block px-4 py-2 text-slate-700 hover:bg-blue-50 hover:text-blue-600 border-b border-slate-100" %>
               <%= link_to "マイページ", user_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50 hover:text-blue-600" %>
               <%= link_to "プロフィール編集", edit_user_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50 hover:text-blue-600" %>
               <hr class="border-slate-100 my-1">
