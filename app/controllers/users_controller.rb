@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+before_action :ensure_correct_user, only: [:edit, :update]
+
   def new
     @user = User.new
   end
@@ -44,5 +46,14 @@ class UsersController < ApplicationController
   # admin: trueなどのハッキングデータを防ぐ。指定した項目のみ保存を許可
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation, :introduction)
+  end
+
+  def ensure_correct_user
+    @user = User.find(params[:id])
+
+    if @user != current_user
+      flash[:alert] = "他人のプロフィールは編集できません"
+      redirect_to root_path
+    end
   end
 end

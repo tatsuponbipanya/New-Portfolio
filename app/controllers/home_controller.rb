@@ -33,8 +33,8 @@ class HomeController < ApplicationController
 
   def destroy
     @workout_log = current_user.workout_logs.find(params[:id])
-    @workout_log.destroy
-    redirect_to user_path(current_user), notice: "筋トレ記録を削除しました。"
+      @workout_log.destroy
+      redirect_to user_path(current_user), notice: "筋トレ記録を削除しました。"
   end
 
   private
