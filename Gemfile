@@ -14,6 +14,10 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 #CSS用の最新のツール
 gem "tailwindcss-rails"
 
+#最強のパスワード暗号化（ハッシュ化）
+gem 'bcrypt', '~> 3.1.7'
+
+# 開発・テスト用
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -21,14 +25,11 @@ group :development, :test do
   # 日本の自社開発企業のシェアNo.1テストツール
   gem "rspec-rails"
 
-  #最強のパスワード暗号化（ハッシュ化）
-  gem 'bcrypt', '~> 3.1.7'
-
   # 開発環境とテスト環境では SQLite を使う
   gem "sqlite3", ">= 2.1"
 end
 
-  # 本番環境（production）で PostgreSQL を使う
+# 本番環境（production）で PostgreSQL を使う
 group :production do
   gem "pg"
 end
