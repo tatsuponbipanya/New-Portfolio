@@ -33,3 +33,4 @@ end
 group :production do
   gem "pg"
 end
+gem "chartkick", "~> 5.2"

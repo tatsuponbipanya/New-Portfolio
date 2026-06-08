@@ -24,6 +24,10 @@ before_action :ensure_correct_user, only: [:edit, :update]
   def show
     @user = User.find(params[:id])
     @workout_logs = @user.workout_logs.order(workout_date: :desc)
+    # グラフ用。mapはリストを更新してまたリストを作れる。eachは取り出すだけ。
+    @chart_data = @workout_logs.group_by(&:body_part).map do |part, logs|
+      [part, logs.sum { |log| log.weight * log.reps }]
+    end.to_h
   end
 
   def edit
