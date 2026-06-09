@@ -1,0 +1,24 @@
+<%# グラフを描くためのライブラリを読み込む %>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://unpkg.com/chartkick@5.0.0/dist/chartkick.js"></script>
+
+<div class="w-full max-w-none px-6 py-8">
+  <h1 class="text-2xl font-bold mb-6 text-slate-800 text-center">📈 種目別・推定MAX（1RM）の推移</h1>
+
+  <%# マイページ（プロフィール詳細画面）へ戻るリンク %>
+  <%= link_to "プロフィール詳細へ戻る", user_path(current_user), class: "inline-block mb-6 text-blue-600 hover:underline font-bold" %>
+
+  <% if @menu_types.any? %>
+    <% @menu_types.each do |menu| %>
+      <div id="<%= menu %>" class="mb-10 bg-white p-6 rounded-lg shadow border border-slate-200 w-full">
+        <h3 class="font-bold text-xl text-slate-800 mb-4 border-b pb-2"><%= menu %></h3>
+        
+        <div style="height: 350px; width: 100%;">
+          <%= line_chart @chart_data_by_menu[menu], xtitle: "日付", ytitle: "推定MAX重量 (kg)", colors: ["#3b82f6"], library: { width: "100%", hAxis: { format: 'yyyy/MM/dd' } } %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="text-slate-500 italic text-center">まだグラフを表示するための筋トレ記録がありません。たくさん記録していこう！</p>
+  <% end %>
+</div>

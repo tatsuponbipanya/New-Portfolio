@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   # ユーザー一覧ページ
   # 必ず（users/:id）より上に書く！
-  get 'users', to: "users#index"
+  get 'users', to: 'users#index'
 
   # プロフィール編集・更新
   get 'users/:id/edit', to: 'users#edit', as: :edit_user
@@ -20,9 +20,10 @@ Rails.application.routes.draw do
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
 
-  # 筋トレのデータ記録・削除
-  root "home#index"
-  post "workout_logs", to: "home#create", as: :workout_logs
+  # 筋トレのデータ記録・削除・分析
+  root 'home#index'
+  get 'analytics', to: 'home#analytics', as: :analytics
+  post 'workout_logs', to: 'home#create', as: :workout_logs
   delete 'workout_logs/:id', to: 'home#destroy', as: :workout_log
   # asは、ビュー（HTML）側で workout_logs_path っていう**便利な近道用の名前（あだ名）**を使えるようにする設定。
   # 複数のデータを扱う場合、必ず複数形（s）で設定する。でないとエラー。

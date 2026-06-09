@@ -37,6 +37,29 @@ class HomeController < ApplicationController
       redirect_to user_path(current_user), notice: "筋トレ記録を削除しました。"
   end
 
+  # 種目別グラフ用（推定1RM推移）
+  def analytics
+    # 日付の古い順にデータを並び替え（orderはデフォでASC（昇順）になる）
+    @workout_logs = current_user.workout_logs.order(:workout_date)
+    # 種目名を重複なしで取得（pluckでログから種目名のみ抜き出し、uniqで重複を除く）
+    @menu_types = @workout_logs.pluck(:menu_type).uniq
+
+    # 種目ごとにグループ化し、｛日付 => その日の最高推定MAX重量(1RM)｝のハッシュを作る。
+    # まずgroup_byで種目ごとにデータを分け、transform_valuesで種目名（キー）は固定したまま、中身のデータを総入れ替えする。
+    @chart_data_by_menu = @workout_logs.group_by(&:menu_type).transform_values do |logs|
+      # さらに「日付（workout_date）」ごとにデータをグループ化（同日の複数セットをまとめる）
+      # ここでもtransform_valuesを使い、日付（キー）は固定のまま、中身を「その日の1RM最大値」に書き換える。
+      logs.group_by { |log| log.workout_date.to_date }.transform_values do |daily_logs|
+        # 同日のすべてのセット（daily_logs）から、それぞれの推定1RMを計算して配列にする
+        daily_logs.map do |log|
+          # 計算式：重量 × (1 + 回数 / 30.0)
+          # Rubyの整数同士の割り算で端数が消えないよう「30.0」で割り、最後は四捨五入して小数第一位にする
+          (log.weight * (1 + log.reps / 30.0)).round(1)
+        end.max # 計算した1RMの中から、その日の「最高値（MAX）」をスカウトしてハッシュの値にする！
+      end
+    end
+  end
+
   private
   #カプセル化（隠蔽）。外からURL（インターネット）経由で呼び出せないメソッド。
   #ハッカーがURLの入力を工夫して、以下のメソッドを直接狙い撃ちしてきても無効に出来る。

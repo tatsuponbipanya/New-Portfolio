@@ -67,7 +67,12 @@
         <% @workout_logs.each do |log| %>
           <tr class="hover:bg-slate-50 transition duration-150">
             <td class="p-3 text-slate-600"><%= log.workout_date.strftime("%Y/%m/%d %H:%M") %></td>
-            <td class="p-3 text-blue-600"><%= log.menu_type %></td>
+
+            <% #種目名は分析ページのリンクへ。アンカー（anchor）で種目別にリンク分け。 %>
+            <td class="p-3">
+              <%= link_to log.menu_type, analytics_path(anchor: log.menu_type), class: "text-blue-600 hover:text-blue-800 hover:underline font-bold" %>
+            </td>
+
             <td class="p-3 text-slate-800"><%= log.weight %> kg</td>
             <td class="p-3 text-slate-800"><%= log.reps %> 回</td>
             <td class="p-3">
