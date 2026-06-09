@@ -13,9 +13,23 @@
     <%= stylesheet_link_tag :app %>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="icon" href="/icon.png?v=2" type="image/png">
     <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# ========================================== %>
+    <%# 手動PWA（Progressive Web App）用の設定コード。ホーム画面に追加出来るようになり、普通のアプリと変わらない使い心地になる %>
+    <%# ========================================== %>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => console.log('PWA登録成功！'))
+          .catch(error => console.log('PWA登録失敗:', error));
+      }
+    </script>
+
   </head>
 
   <body class="bg-slate-50 text-slate-800">
