@@ -72,7 +72,7 @@
 
             <%# 2. 種目名 %>
             <td class="p-3">
-              <%= link_to menu_type, analytics_path(anchor: menu_type), class: "text-blue-600 hover:text-blue-800 hover:underline font-bold" %>
+              <%= link_to menu_type, analytics_path(@user, anchor: menu_type), class: "text-blue-600 hover:text-blue-800 hover:underline font-bold" %>
             </td>
 
             <%# 3. セット内容（縦並びにして、右隣の1RMと高さが揃うように） %>
@@ -102,9 +102,13 @@
 
             <%# 5. 操作（まとまった単位の「最初のログ」を削除する） %>
             <td class="p-3">
+             <% if @user == current_user %>
               <%= button_to "削除", workout_log_path(logs.first), method: :delete, 
                             onclick: "return confirm('この種目の記録（全#{logs.count}セット）を削除して良いですか？');", 
                             class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-3 rounded text-xs cursor-pointer transition" %>
+             <% else %>
+                <span class="text-slate-400 text-xs">閲覧のみ</span>
+             <% end %>
             </td>
           </tr>
         <% end %>

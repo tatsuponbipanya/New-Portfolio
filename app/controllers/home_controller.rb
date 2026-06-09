@@ -42,8 +42,9 @@ class HomeController < ApplicationController
 
   # 種目別グラフ用（推定1RM推移）
   def analytics
+    @user = User.find(params[:id])
     # 日付の古い順にデータを並び替え（orderはデフォでASC（昇順）になる）
-    @workout_logs = current_user.workout_logs.order(:workout_date)
+    @workout_logs = @user.workout_logs.order(:workout_date)
     # 種目名を重複なしで取得（pluckでログから種目名のみ抜き出し、uniqで重複を除く）
     @menu_types = @workout_logs.pluck(:menu_type).uniq
 
@@ -53,12 +54,8 @@ class HomeController < ApplicationController
       # さらに「日付（workout_date）」ごとにデータをグループ化（同日の複数セットをまとめる）
       # ここでもtransform_valuesを使い、日付（キー）は固定のまま、中身を「その日の1RM最大値」に書き換える。
       logs.group_by { |log| log.workout_date.to_date }.transform_values do |daily_logs|
-        # 同日のすべてのセット（daily_logs）から、それぞれの推定1RMを計算して配列にする
-        daily_logs.map do |log|
-          # 計算式：重量 × (1 + 回数 / 30.0)
-          # Rubyの整数同士の割り算で端数が消えないよう「30.0」で割り、最後は四捨五入して小数第一位にする
-          (log.weight * (1 + log.reps / 30.0)).round(1)
-        end.max # 計算した1RMの中から、その日の「最高値（MAX）」をスカウトしてハッシュの値にする！
+        # 同日のすべてのセット（daily_logs）から、それぞれの推定1RMを計算する
+        daily_logs.map(&:estimated_1rm).max
       end
     end
   end

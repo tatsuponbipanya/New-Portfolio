@@ -3,10 +3,12 @@
 <script type="text/javascript" src="https://unpkg.com/chartkick@5.0.0/dist/chartkick.js"></script>
 
 <div class="w-full max-w-none px-6 py-8">
-  <h1 class="text-2xl font-bold mb-6 text-slate-800 text-center">📈 種目別・推定MAX（1RM）の推移</h1>
+  <h1 class="text-2xl font-bold mb-2 text-slate-800 text-center">
+    📈 <%= @user.name %> さんの種目別・推定MAX（1RM）の推移
+  </h1>
+  <p class="text-center text-sm text-slate-500 mb-6">過去の最高記録の推移グラフです。</p>
 
-  <%# マイページ（プロフィール詳細画面）へ戻るリンク %>
-  <%= link_to "プロフィール詳細へ戻る", user_path(current_user), class: "inline-block mb-6 text-blue-600 hover:underline font-bold" %>
+  <%= link_to "#{@user.name}さんのプロフィール詳細へ戻る", user_path(@user), class: "inline-block mb-6 text-blue-600 hover:underline font-bold" %>
 
   <% if @menu_types.any? %>
     <% @menu_types.each do |menu| %>
