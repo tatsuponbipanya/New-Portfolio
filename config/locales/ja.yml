@@ -1,6 +1,5 @@
 ---
 ja:
-  # 💡 筋トレ記録とユーザーの日本語名を、一番正しい「ja:」のすぐ下の特等席にガツンと合流させただの！
   activerecord:
     models:
       workout_log: "筋トレ記録"
@@ -17,8 +16,19 @@ ja:
         password: "パスワード"
         password_confirmation: "パスワード（確認）"
         introduction: "自己紹介文"
-
+  activemodel:
+    attributes:
+      workout_form:
+        menu_type: "種目名"
+        workout_date: "トレーニング日時"
     errors:
+      models:
+        workout_form:
+          attributes:
+            base:
+              blank_sets: "少なくとも1セット以上の重量と回数を入力してください"
+              blank_reps: "%{num}セット目の回数を入力してください"
+              blank_weight: "%{num}セット目の重量を入力してください"
       messages:
         record_invalid: 'バリデーションに失敗しました: %{errors}'
         restrict_dependent_destroy:
