@@ -25,4 +25,10 @@ class WorkoutLog < ApplicationRecord
         "その他"
       end
     end
+
+    # 1RM計算用。重量か回数が空白だった場合、0.0を返して終了。
+    def estimated_1rm
+        return 0.0 if weight.blank? || reps.blank?
+        (weight * (1 + reps / 30.0)).round(1)
+    end
 end

@@ -58,26 +58,52 @@
         <tr class="bg-slate-100 border-b-2 border-slate-200 text-slate-700">
           <th class="p-3">日付</th>
           <th class="p-3">種目名</th>
-          <th class="p-3">重量 (kg)</th>
-          <th class="p-3">回数 (Reps)</th>
+          <th class="p-3">セット内容</th>
+          <th class="p-3">推定1RM</th>
           <th class="p-3">操作</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-100">
-        <% @workout_logs.each do |log| %>
+        <%# 日付と種目名でグループ化 %>
+        <% @workout_logs.group_by { |log| [log.workout_date.strftime("%Y/%m/%d %H:%M"), log.menu_type] }.each do |(date_str, menu_type), logs| %>
           <tr class="hover:bg-slate-50 transition duration-150">
-            <td class="p-3 text-slate-600"><%= log.workout_date.strftime("%Y/%m/%d %H:%M") %></td>
+            <%# 1. 日付 %>
+            <td class="p-3 text-slate-600"><%= date_str %></td>
 
-            <% #種目名は分析ページのリンクへ。アンカー（anchor）で種目別にリンク分け。 %>
+            <%# 2. 種目名 %>
             <td class="p-3">
-              <%= link_to log.menu_type, analytics_path(anchor: log.menu_type), class: "text-blue-600 hover:text-blue-800 hover:underline font-bold" %>
+              <%= link_to menu_type, analytics_path(anchor: menu_type), class: "text-blue-600 hover:text-blue-800 hover:underline font-bold" %>
             </td>
 
-            <td class="p-3 text-slate-800"><%= log.weight %> kg</td>
-            <td class="p-3 text-slate-800"><%= log.reps %> 回</td>
+            <%# 3. セット内容（縦並びにして、右隣の1RMと高さが揃うように） %>
+            <td class="p-3 text-slate-800">
+              <div class="space-y-1">
+                <% logs.each_with_index do |log, index| %>
+                  <div class="block text-sm py-0.5">
+                    <span class="text-slate-500 text-xs w-12 inline-block"><%= index + 1 %>set:</span>
+                    <span><strong><%= log.weight %></strong> kg × <strong><%= log.reps %></strong> 回</span>
+                  </div>
+                <% end %>
+              </div>
+            </td>
+
+            <%# 4. 推定1RM %>
             <td class="p-3">
-              <%= button_to "削除", workout_log_path(log), method: :delete, 
-                            onclick: "return confirm('本当にこの筋トレ記録を削除して良いですか？');", 
+              <div class="space-y-1">
+                <% logs.each do |log| %>
+                  <div class="py-0.5">
+                    <span class="text-[11px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-full font-normal inline-block">
+                      1RM: <%= log.estimated_1rm %>kg
+                    </span>
+                  </div>
+                <% end %>
+              </div>
+            </td>
+
+            <%# 5. 操作（まとまった単位の「最初のログ」を削除する） %>
+            <td class="p-3">
+              <%= button_to "削除", workout_log_path(logs.first), method: :delete, 
+                            onclick: "return confirm('この種目の記録（全#{logs.count}セット）を削除して良いですか？');", 
                             class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-3 rounded text-xs cursor-pointer transition" %>
             </td>
           </tr>
