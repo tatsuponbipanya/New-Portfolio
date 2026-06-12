@@ -8,9 +8,11 @@ class WorkoutForm
   attribute :workout_date, :datetime
   attribute :menu_type, :string
 
-  # 各セットのデータを保持する配列
-  # これを書いておくだけで、外部（コントローラーなど）から @workout_form.sets_attributes = データの塊 っていう風に、その物置きの中にデータを放り込んだり、逆に中身を取り出したりできるようになる
-  # 今回の場合、画面から送られてくる「1セット目：80kg/5回、2セット目：75kg/6回…」というごちゃっとしたセット情報の塊を、一時的にこの sets_attributes という名前の物置きに保管する
+  # 各セットのデータを保持する配列。
+  # これを書いておくだけで、外部（コントローラーなど）から @workout_form.sets_attributes = データの塊 という風に、
+  # その物置きの中にデータを放り込んだり、逆に中身を取り出したりできるようになる。
+  # 今回の場合、画面から送られてくる「1セット目：80kg/5回、2セット目：75kg/6回…」というセット情報の塊を、
+  # 一時的にこの sets_attributes という名前の物置きに保管する。
   attr_accessor :sets_attributes
 
   # バリデーション（入力チェック）
@@ -48,6 +50,22 @@ class WorkoutForm
     false # もし途中で例外エラーが起きたら、ここへワープして「失敗（false）」を返す(入力画面に戻る)
           # ActiveRecord::RecordInvalid：数あるエラーの中でも「データベースの保存ルールに違反した！」という種類のエラーのこと。
   end
+
+  # home/index.htmlのセット入力欄を生み出すeach ループに、入力エラー時でも正しいデータを届ける。
+  def sets_attributes_for_render
+    # 1. もしエラーで戻ってきて、送信されたセットデータ（sets_attributes）が存在する場合
+    if sets_attributes.present?
+      # データの形を、ビューのループが処理しやすいように、mapとsortで配列に並び替えて送り返す。
+      # （{"0"=>{"weight"=>"83"}, "1"=>{"weight"=>"80"}} の中身だけを、上から順に取り出す）
+      # キーの"0"や"1"は文字なので、ソート出来るようにto_iで数字に変換。「_|」で一旦中身は無視。
+      # ソート出来たら中身を回収。キーはもういらないので「|_」で無視。
+      sets_attributes.sort_by { |key, _| key.to_i }.map { |_, value| value }
+    else
+      # 2. 一番最初に入力画面を開いた時（まだ何も送信してない時）は、
+      # 1セット目の「真っ白な空っぽの箱」を1個だけ入れてビューに送り返す
+      [{ 'weight' => nil, 'reps' => nil }]
+    end
+  end  
 
   private
 
