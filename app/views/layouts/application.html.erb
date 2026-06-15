@@ -57,12 +57,20 @@
             <%# プルダウンの中身 %>
             <div x-show="open" 
                  x-transition
-                 class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-md shadow-lg py-1 z-50 font-bold text-sm" 
+                 class="absolute right-0 mt-2 w-52 bg-white border border-slate-200 rounded-md shadow-lg py-1 z-50 font-bold text-sm" 
                  style="display: none;">
               <%= link_to "筋トレを始める！", root_path, class: "block px-4 py-2 text-slate-700 hover:bg-blue-50 hover:text-blue-600 border-b border-slate-100" %>
-              <%= link_to "マイページ", user_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50 hover:text-blue-600" %>
+              <%= link_to "マイページ・記録一覧", user_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50 hover:text-blue-600" %>
+              <%= link_to "プロフィール編集", edit_user_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50 hover:text-blue-600 border-b border-slate-100" %>
+
+              <hr class="border-slate-100 my-1">
               <%= link_to "推定MAX（1RM）の遷移", analytics_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50 hover:text-blue-600" %>
-              <%= link_to "筋トレ仲間一覧", users_path, class: "block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 font-bold" %>
+              <%= link_to "筋トレ仲間一覧", users_path, class: "block px-4 py-2 text-slate-700 hover:bg-slate-100" %>
+              
+              <hr class="border-slate-100 my-1">
+              <%= link_to "テンプレート新規作成", new_workout_template_path, class: "block px-4 py-2 text-slate-700 hover:bg-emerald-50 hover:text-emerald-600" %>
+              <%= link_to "テンプレート編集・削除", manage_workout_templates_path, class: "block px-4 py-2 text-slate-700 hover:bg-blue-50 hover:text-blue-600" %>
+              
               <hr class="border-slate-100 my-1">
               <%= button_to "ログアウト", logout_path, method: :delete, class: "w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 cursor-pointer" %>
             </div>
@@ -72,14 +80,14 @@
     </header>
 
     <main class="container mx-auto mt-10 px-5 max-w-2xl flex flex-col">
-      <%# フラッシュメッセージの表示を追加 %>
+      <% # フラッシュメッセージの表示を追加 %>
       <% flash.each do |name, msg| %>
         <div class="mb-4 p-4 rounded-md font-bold text-center <%= name == 'alert' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' %>">
           <%= msg %>
         </div>
       <% end %>
 
-      <%# ここが各ページのメインの中身が入るところ。 %>
+      <% # ここが各ページのメインの中身が入るところ。 %>
       <%= yield %>
     </main>
   </body>

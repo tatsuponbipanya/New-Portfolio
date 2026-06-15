@@ -29,4 +29,11 @@ Rails.application.routes.draw do
   # 複数のデータを扱う場合、必ず複数形（s）で設定する。でないとエラー。
   # このあだ名がないと、ビューのform_withの1行目を、「URLを直接手書き」して書かなきゃいけなくなる。
   # 将来、URLを変更したくなったときも、ルーティングのファイルのURL部分を1箇所書き換えるだけで済む。
+
+  # テンプレートの作成画面、保存・編集
+  get 'workout_templates/new', to: 'home#new_template', as: :new_workout_template
+  post 'workout_templates', to: 'home#create_template', as: :workout_templates
+  get 'workout_templates', to: 'home#new_template'
+  delete 'workout_templates/:id', to: 'home#destroy_template', as: :destroy_workout_template
+  get 'workout_templates/manage', to: 'home#index_templates', as: :manage_workout_templates
 end

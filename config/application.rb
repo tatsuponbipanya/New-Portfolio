@@ -26,6 +26,7 @@ module PortfolioV2
     
     # 基本言語を日本語にする
     config.i18n.default_locale = :ja
+    config.i18n.locale = :ja
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.

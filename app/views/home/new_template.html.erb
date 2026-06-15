@@ -1,0 +1,92 @@
+<% # app/views/home/new_template.html.erb %>
+
+<h1 class="text-3xl font-bold text-slate-800 mb-2">テンプレート作成</h1>
+<p class="text-sm text-gray-500 mb-6">自分だけの筋トレメニューを登録しよう！</p>
+
+<% if @workout_template.errors.any? %>
+  <div class="error-messages bg-rose-50 border border-rose-200 text-rose-800 p-4 my-4 rounded-md max-w-md">
+    <p class="font-bold mb-2">⚠️ 入力内容を確認してください：</p>
+    <ul class="list-disc pl-5 space-y-1 font-bold">
+      <% @workout_template.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: @workout_template, url: workout_templates_path, local: true, class: "space-y-4 max-w-md pb-16" do |f| %>
+  
+  <% # 1. テンプレート名入力欄 %>
+  <div class="flex flex-col">
+    <%= f.label :name, "テンプレート名：", class: "font-bold text-slate-700 mb-1" %>
+    <%= f.text_field :name, placeholder: "例：月曜：胸の日（ベンチメイン）", class: "border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" %>
+  </div>
+
+  <% # 種目名はここに1個だけ設置 workout_template_setsの最初の1行のデータとして送る %>
+  <div class="flex flex-col">
+  <label for="template_main_menu_type" class="font-bold text-slate-700 mb-1">対象の種目名：</label>
+  <% # さっき選んで送信した種目名（パラメータ）をピンポイントで取得する
+    selected_menu = params.dig(:workout_template, :workout_template_sets_attributes, "0", :menu_type)
+  %>
+  <select name="workout_template[workout_template_sets_attributes][0][menu_type]" id="template_main_menu_type" class="border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+    <option value="">種目を選択</option>
+    <% [["ベンチプレス", "ベンチプレス"], ["チンニング", "チンニング"], ["スクワット", "スクワット"], ["ディップス", "ディップス"], ["ハンマーカール", "ハンマーカール"], ["サイドレイズ", "サイドレイズ"], ["デッドリフト", "デッドリフト"]].each do |name, value| %>
+      <% # さっき選んだ種目名と一致したら、selected="selected" を HTML に入力 %>
+      <option value="<%= value %>" <%= 'selected' if selected_menu == value %>><%= name %></option>
+    <% end %>
+  </select>
+  </div>
+
+  <h3 class="font-bold text-slate-700 mt-6 mb-2">デフォルトのセット内容</h3>
+  
+  <% # 2. セットの入力欄コンテナ（重量と回数だけを追加） %>
+  <div id="template-sets-container" class="space-y-3">
+    <%= f.fields_for :workout_template_sets do |s| %>
+      <div class="template-set-row flex flex-col bg-slate-50 p-3 rounded border border-slate-200 space-y-2" data-set-index="0">
+        
+        <div class="flex items-center space-x-3">
+          <% # s.index は 0 から始まるから、1 を足してあげると「1セット目」「2セット目」になる %>
+          <span class="template-set-label font-bold text-slate-500 w-16"><%= s.index + 1 %>セット目</span>
+          <div class="flex-1 flex items-center space-x-2">
+            
+            <%= s.number_field :default_weight, step: "0.1", placeholder: "重量(kg)", class: "border border-slate-300 rounded px-3 py-1.5 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 w-full bg-white text-center text-sm" %>
+            <span class="text-slate-400 text-sm">kg</span>
+            
+            <%= s.number_field :default_reps, placeholder: "回数", class: "border border-slate-300 rounded px-3 py-1.5 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 w-full bg-white text-center text-sm" %>
+            <span class="text-slate-400 text-sm">回</span>
+            
+            <%= s.hidden_field :step_number, value: 1, class: "template-step-input" %>
+          </div>
+        </div>
+
+        <div class="text-right">
+            <% # いま処理しているセットが「1セット目（indexが0）」のときだけ削除ボタンに 'hidden' をつける
+                # 2セット目以降（indexが1以上）なら、空っぽにする（hiddenをつけない）
+                hidden_class = (s.index == 0) ? 'hidden' : ''
+            %>
+            <button type="button" class="delete-template-set-btn <%= hidden_class %> bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold py-1 px-3 rounded transition-colors duration-200">
+                削除
+            </button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% # 3. セット追加ボタン %>
+  <button type="button" id="add-template-set-btn" class="w-full mt-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded border border-dashed border-slate-300 transition text-sm">
+    ＋ セットを追加する
+  </button>
+
+  <div class="pt-4">
+    <%= f.submit "テンプレートを保存する！", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded shadow-md cursor-pointer transition duration-200" %>
+  </div>
+
+  <div class="mt-4 pb-12 text-center">
+    <%= link_to "← 筋トレ画面に戻る", root_path, class: "text-sm font-bold text-blue-600 hover:underline" %>
+  </div>
+<% end %>
+
+<div class="pb-12"></div>
+
+<% # JavaScriptファイル読み込み %>
+<%= javascript_include_tag 'workout_template', 'data-turbo-track': 'reload' %>

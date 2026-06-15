@@ -1,9 +1,10 @@
----
 ja:
   activerecord:
     models:
       workout_log: "筋トレ記録"
       user: "ユーザー"
+      workout_template: "テンプレート"
+      workout_template_set: "セット内容"
     attributes:
       workout_log:
         menu_type: "種目名"
@@ -16,6 +17,25 @@ ja:
         password: "パスワード"
         password_confirmation: "パスワード（確認）"
         introduction: "自己紹介文"
+      
+      # 💡 テンプレート単体用の設定お！
+      workout_template:
+        name: "テンプレート名"
+      workout_template_set:
+        menu_type: "種目名"
+        default_weight: "重量"
+        default_reps: "回数"
+
+      # 💡【ここが本気の大修正！】
+      # 親子関係（fields_for）の時に Rails が生成する特殊なキーを全部先回りして日本語登録したお！
+      workout_template/workout_template_sets:
+        menu_type: "種目名"
+        default_weight: "重量"
+        default_reps: "回数"
+      "workout_template_sets.menu_type": "種目名"
+      "workout_template_sets.default_weight": "重量"
+      "workout_template_sets.default_reps": "回数"
+
   activemodel:
     attributes:
       workout_form:

@@ -12,15 +12,15 @@ class SessionsController < ApplicationController
       session[:user_id] = user.id
       redirect_to root_path, notice: "ログインしました。"
     else
-      #ログインに失敗した場合
+      #ログインに失敗した場合。nowをつけないと、次のページまでこのアラートが残る。
       flash.now[:alert] = "メールかパスワードが正しくありません。"
       render :new
     end
   end
 
   def destroy
-    #ログアウト処理。セッションIDを消す。
-    session[:user_id] = nil
+    #ログアウト処理。セッションを全て破棄。
+    reset_session
     redirect_to root_path, notice: "ログアウトしました。"
   end
 end

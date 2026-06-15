@@ -5,6 +5,7 @@ class User < ApplicationRecord
     #ユーザーは複数の記録を持っているという宣言
     #dependent: :destroyをつけることでユーザーを消す時、データも一緒に消せる。
     has_many :workout_logs, dependent: :destroy
+    has_many :workout_templates, dependent: :destroy
 
     validates :name, presence: true
     validates :email, presence: true, uniqueness: true

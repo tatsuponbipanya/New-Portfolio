@@ -27,12 +27,14 @@ class WorkoutForm
     return false unless valid?
 
     # トランザクション（エラーが起きたら全部取り消す安全装置）
-    # これがないと1セット目が通って2セット目でエラーが出た場合、1セット目の中途半端なデータが残ってしまう。
+    # これがないと、1セット目が通って2セット目でエラーが出た場合、1セット目の中途半端なデータが残ってしまう。
     ActiveRecord::Base.transaction do
-      # sets_attributes に入ってきた各セットのデータをループで保存する
+
+      # sets_attributes に入ってきた各セットのデータをループで保存する。
       # この _ は「データは入ってくるけど、私は一切使わないから無視する！」という意味の変数名
-      sets_attributes.each do |_, set_params|
-        # 重量と回数の両方が入っているセットだけを保存する
+      sets_attributes&.each do |_, set_params|
+
+        # 重量と回数の両方が入っているセットだけを保存。
         # create! の後ろについている !は、「もし保存に失敗したら、遠慮なく例外エラーを発生させてね」という合図。これによって、さっきの安全装置（トランザクション）がすぐに発動できるようになっている
         if set_params[:weight].present? && set_params[:reps].present?
           WorkoutLog.create!(
@@ -46,9 +48,12 @@ class WorkoutForm
       end
     end
     true # 全部のループが無事に終わったら「成功（true）」を返す
-  rescue ActiveRecord::RecordInvalid
-    false # もし途中で例外エラーが起きたら、ここへワープして「失敗（false）」を返す(入力画面に戻る)
-          # ActiveRecord::RecordInvalid：数あるエラーの中でも「データベースの保存ルールに違反した！」という種類のエラーのこと。
+
+  # もし途中で、データベースの保存ルール違反（ActiveRecord::RecordInvalid）が起きた場合、それをキャッチしてe（error）に代入。
+  rescue ActiveRecord::RecordInvalid => e
+    # 発生したエラーメッセージを取得。:baseを指定すると、「特定の入力欄ではなく、このフォーム全体のエラーだよ！」という意味になり、特定の入力欄の横ではなく、画面の一番上とかにまとめて表示されるようになる。
+    errors.add(:base, e.message)
+    false
   end
 
   # home/index.htmlのセット入力欄を生み出すeach ループに、入力エラー時でも正しいデータを届ける。
@@ -71,24 +76,30 @@ class WorkoutForm
 
   # ja.yml の辞書を使ってエラーメッセージを出すバリデーション
   def validate_sets
+    # セットのデータが空か、セットの重量とrepsが全て空の場合、エラーを表示して処理を終了。
     if sets_attributes.blank? || sets_attributes.values.all? { |set| set[:weight].blank? && set[:reps].blank? }
       # ja.yml の blank_sets を呼び出す
       errors.add(:base, :blank_sets)
       return
     end
 
-    sets_attributes.each do |index, set_params|
+    # &. は、ぼっち演算子。中身が空っぽ（nil）のオブジェクトに対してメソッドを呼び出しても、プログラムがクラッシュせずに、nilを返してスルーしてくれるので、つけておいた方が安全。
+    # ここで入力されたデータを取り出す。
+    sets_attributes&.each do |index, set_params|
       weight = set_params[:weight]
       reps = set_params[:reps]
       set_num = index.to_i + 1
 
+      # 重量もrepsも両方空のセットは、スルー。
       next if weight.blank? && reps.blank?
 
+      # 重量はあるが、repsが空の場合はエラー表示
       if weight.present? && reps.blank?
         # ja.yml の blank_reps を呼び出して、セット数を％{num}に挿入
         errors.add(:base, :blank_reps, num: set_num)
       end
 
+      # 重量が空で、repsだけある場合もエラー表示
       if weight.blank? && reps.present?
         # ja.yml の blank_weight を呼び出して、セット数を％{num}に挿入
         errors.add(:base, :blank_weight, num: set_num)

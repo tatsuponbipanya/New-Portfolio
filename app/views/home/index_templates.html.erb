@@ -1,0 +1,39 @@
+<% # app/views/home/index_templates.html.erb %>
+
+<h1 class="text-3xl font-bold text-slate-800 mb-2">テンプレート管理</h1>
+<p class="text-sm text-gray-500 mb-6">登録したメニューの編集・削除</p>
+
+<div class="max-w-md space-y-4 pb-16">
+  <% if @templates.empty? %>
+    <p class="text-sm font-bold text-gray-500">登録されたテンプレートはまだありません</p>
+  <% else %>
+    <% @templates.each do |template| %>
+      <div class="bg-white p-4 rounded-md border border-slate-200 shadow-sm flex flex-col justify-between space-y-3">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800"><%= template.name %></h2>
+          
+          <ul class="mt-2 space-y-1 text-sm font-bold text-slate-600 pl-2 border-l-2 border-slate-300">
+            <% template.workout_template_sets.each do |set| %>
+              <li>
+                <%= set.menu_type %>: <%= set.default_weight %>kg × <%= set.default_reps %>回
+              </li>
+            <% end %>
+          </ul>
+        </div>
+        <div class="flex items-center space-x-2 pt-2 border-t border-slate-100 justify-end">
+          <span class="text-xs text-slate-400 font-bold mr-auto">セット数: <%= template.workout_template_sets.size %></span>
+
+          <%= button_to "削除", destroy_workout_template_path(template), 
+                method: :delete, 
+                onclick: "return confirm('本当に『#{template.name}』を削除していいですか？');", 
+                class: "bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold py-1.5 px-3 rounded transition cursor-pointer" %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
+  <div class="pt-6 border-t border-slate-200 flex justify-between">
+    <%= link_to "← 筋トレ画面に戻る", root_path, class: "text-sm font-bold text-blue-600 hover:underline" %>
+    <%= link_to "＋ 新しく作る", new_workout_template_path, class: "text-sm font-bold text-blue-600 hover:underline" %>
+  </div>
+</div>
