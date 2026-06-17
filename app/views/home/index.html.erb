@@ -20,19 +20,16 @@
     <%= f.datetime_field :workout_date, value: Time.current.change(sec: 0), step: 60, class: "border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500" %>
   </div>
 
-<div class="flex flex-col">
+<div class="flex flex-col space-x-2">
     <label for="template_select" class="font-bold text-blue-700 mb-1 flex items-center">
       テンプレートから自動入力する
     </label>
-
-    <div class="flex items-center space-x-2">
     
     <% # select_tag の中身を、データ属性が仕込めるカスタム仕様に書き換え %>
-    <select name="template_select" id="template_select" class="border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+    <select name="template_select" id="template_select" class="w-full border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
       <option value="">―― テンプレートを選択 ――</option>
       <% @templates.each do |template| %>
         <% 
-          # ここで、このテンプレートに紐づくセット内容をJavaScript用のデータ（JSON）に変換
           sets_json = template.workout_template_sets.map { |s| 
             { menu: s.menu_type, weight: s.default_weight.to_f, reps: s.default_reps } 
           }.to_json
@@ -43,8 +40,9 @@
       <% end %>
     </select>
 
-      <%= link_to "新規作成", new_workout_template_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded text-sm transition text-center whitespace-nowrap shadow-sm" %>
-      <%= link_to "編集・削除", manage_workout_templates_path, class: "bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-3 rounded text-sm transition text-center whitespace-nowrap" %>
+    <div class="flex items-center space-x-2">
+      <%= link_to "新規作成", new_workout_template_path, class: "flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded text-sm transition text-center whitespace-nowrap shadow-sm" %>
+      <%= link_to "編集・削除", manage_workout_templates_path, class: "flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-3 rounded text-sm transition text-center whitespace-nowrap" %>
     </div>
 </div>
 

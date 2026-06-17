@@ -1,8 +1,8 @@
 # app/controllers/home_controller.rb
 class HomeController < ApplicationController
-  # 💡 ログインしていなかったら、ログイン画面へリダイレクト
+  # ログインしていなかったら、ログイン画面へリダイレクト
   before_action :require_login
-  # ただし、トップページのみは表示可能（※新しいテンプレート画面はログイン必須エリアになるお！）
+  # ただし、トップページのみは表示可能
   skip_before_action :require_login, only: [:index]
 
   def index
@@ -44,11 +44,18 @@ class HomeController < ApplicationController
   # 種目別グラフ用（推定1RM推移）
   def analytics
     @user = User.find(params[:id])
+    # 日付の古い順にデータを並び替え（orderはデフォでASC（昇順）になる）
     @workout_logs = @user.workout_logs.order(:workout_date)
+    # 種目名を重複なしで取得（pluckでログから種目名のみ抜き出し、uniqで重複を除く）
     @menu_types = @workout_logs.pluck(:menu_type).uniq
 
+    # 種目ごとにグループ化し、｛日付 => その日の最高推定MAX重量(1RM)｝のハッシュを作る。グラフ用のデータはハッシュでないといけない。
+    # まずgroup_byで種目ごとにデータを分け、transform_valuesで種目名（キー）は固定したまま、中のデータを総入れ替えする。
     @chart_data_by_menu = @workout_logs.group_by(&:menu_type).transform_values do |logs|
+      # 「日付（workout_date）」ごとにデータをグループ化（同日の複数セットをまとめる）
+      # ここでもtransform_valuesを使い、日付（キー）は固定のまま、中身を「その日の1RM最大値」に書き換える。
       logs.group_by { |log| log.workout_date.to_date }.transform_values do |daily_logs|
+        # 同日のすべてのセット（daily_logs）から、それぞれの推定1RMを計算して再配列化し、最大値を取得。
         daily_logs.map(&:estimated_1rm).max
       end
     end
@@ -100,8 +107,12 @@ class HomeController < ApplicationController
     redirect_to manage_workout_templates_path, notice: "テンプレート『#{@template.name}』を削除しました"
   end
 
+  #カプセル化（隠蔽）。外からURL（インターネット）経由で呼び出せないメソッド。
+  #ハッカーがURLの入力を工夫して、以下のメソッドを直接狙い撃ちしてきても無効に出来る。
   private
 
+  #セキュリティ。ちゃんとworkout_formのデータがあるかのチェックと、日付、メニュー名、重量、回数の4つのデータだけを通過許可。
+  #これがないと、admin: true（自分を管理者権限にする）などのデータが通ってしまう。
   def workout_form_params
     params.require(:workout_form).permit(
       :workout_date,
