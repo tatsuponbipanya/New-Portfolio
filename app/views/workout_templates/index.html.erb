@@ -1,5 +1,3 @@
-<% # app/views/home/index_templates.html.erb %>
-
 <h1 class="text-3xl font-bold text-slate-800 mb-2">テンプレート管理</h1>
 <p class="text-sm text-gray-500 mb-6">登録したメニューの編集・削除</p>
 
@@ -23,7 +21,10 @@
         <div class="flex items-center space-x-2 pt-2 border-t border-slate-100 justify-end">
           <span class="text-xs text-slate-400 font-bold mr-auto">セット数: <%= template.workout_template_sets.size %></span>
 
-          <%= button_to "削除", destroy_workout_template_path(template), 
+          <%= link_to "編集", edit_workout_template_path(template), 
+                class: "bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold py-1.5 px-3 rounded transition text-center shadow-sm" %>
+
+          <%= button_to "削除", workout_template_path(template), 
                 method: :delete, 
                 onclick: "return confirm('本当に『#{template.name}』を削除していいですか？');", 
                 class: "bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold py-1.5 px-3 rounded transition cursor-pointer" %>

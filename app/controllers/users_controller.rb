@@ -58,7 +58,7 @@ before_action :ensure_correct_user, only: [:edit, :update]
     @user = User.find(params[:id])
 
     if @user != current_user
-      flash[:alert] = "他人のプロフィールは編集できません"
+      flash[:alert] = "他のユーザーのプロフィールは編集できません。"
       redirect_to root_path
     end
   end

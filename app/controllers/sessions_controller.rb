@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
     if user && user.authenticate(params[:password])
       #ログイン成功。セッションにユーザーIDを保存
       session[:user_id] = user.id
-      redirect_to root_path, notice: "ログインしました。"
+      redirect_to root_path, notice: "ログインしました！"
     else
       #ログインに失敗した場合。nowをつけないと、次のページまでこのアラートが残る。
       flash.now[:alert] = "メールかパスワードが正しくありません。"
