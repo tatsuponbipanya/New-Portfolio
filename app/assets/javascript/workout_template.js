@@ -17,8 +17,8 @@ function initTemplateFeature() {
 // 逆に、「何が起きたかのデータはどうでもいいから、とにかくイベントが起きたらこの処理をして！」という、合図だけで完結する時は () で良い。
 // 今回は「ユーザーが今、何番目の選択肢を選んだか」という【中身の情報】が必要。
 function handleTemplateChange(e) {
-    // htmlから要素をゲットしてくる。e.targetで選ばれたテンプレートを取得。menuSelectは種目名。
-    const templateSelect = e.target;
+    // htmlから選ばれたテンプレートを取得。menuSelectは種目名。
+    const templateSelect = document.getElementById("template_select");
     const menuSelect = document.getElementById("workout_form_menu_type");
 
     // テンプレートの選択肢（optionタグ）のリストから、何番のoptionを選んだか取得
@@ -120,10 +120,12 @@ function handleTemplateChange(e) {
             const row = finalSetRows[index];
             // ここも本来であればforEachなのでデータ（row）がないのにループが回っているということはありえないが、htmlの工事が遅れていた時のバグ回避。
             if (row) {
-                // html側に設定したID（#weight_input_0 など）で、重量の入力欄とrepsの入力欄をhtmlから取得。
-                // row.querySelector を使うことで、その行（row）の中にある指定のIDを見つけられる。
-                const weightInput = row.querySelector(`#weight_input_${index}`);
-                const repsInput = row.querySelector(`#reps_input_${index}`);
+                // その行（row）の中にある「すべてのinputタグ」を集める。
+                const inputs = row.querySelectorAll("input");
+
+                // 1番目の入力欄（[0]番目）が重量、2番目の入力欄（[1]番目）がreps（回数）
+                const weightInput = inputs[0];
+                const repsInput = inputs[1];
 
                 // 画面の重量・repsをその値に変える。
                 if (weightInput) weightInput.value = setData.weight;
@@ -252,3 +254,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initTemplateFeature();
     initNewTemplateFeature();
 });
+// 【4】ファイルが読み込まれた瞬間、即実行するダメ押し用
+initTemplateFeature();
+initNewTemplateFeature();

@@ -20,7 +20,7 @@
     <%= f.datetime_field :workout_date, value: Time.current.change(sec: 0), step: 60, class: "border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500" %>
   </div>
 
-<div class="flex flex-col space-x-2">
+<div class="flex flex-col">
     <label for="template_select" class="font-bold text-blue-700 mb-1 flex items-center">
       テンプレートから自動入力する
     </label>
@@ -40,7 +40,7 @@
       <% end %>
     </select>
 
-    <div class="flex items-center space-x-2">
+    <div class="flex items-center space-x-2 mt-2.5">
       <%= link_to "新規作成", new_workout_template_path, class: "flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded text-sm transition text-center whitespace-nowrap shadow-sm" %>
       <%= link_to "編集・削除", manage_workout_templates_path, class: "flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-3 rounded text-sm transition text-center whitespace-nowrap" %>
     </div>
