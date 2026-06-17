@@ -1,0 +1,66 @@
+<div class="fixed inset-0 -z-20 bg-cover bg-center bg-no-repeat" 
+     style="background-image: url('https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?q=80&w=1200&auto=format&fit=crop');">
+</div>
+
+<div class="fixed inset-0 bg-white/40 backdrop-blur-xs -z-10"></div>
+
+<div class="relative min-h-[80vh] flex flex-col items-center justify-center px-4 py-20 overflow-hidden">
+  <div class="w-full max-w-md bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-2xl p-8">
+    
+    <div class="text-center mb-8">
+      <span class="inline-block bg-blue-100 text-blue-600 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+        RUNNING GEAR
+      </span>
+      <h1 class="text-3xl font-black tracking-tight text-slate-800 mb-2">
+        SHOE REGISTRATION
+      </h1>
+      <p class="text-sm text-slate-600">
+        ランニングシューズを登録しよう！
+      </p>
+    </div>
+
+    <%= form_with(model: @shoe, local: true, class: "space-y-6") do |f| %>
+      
+      <% if @shoe.errors.any? %>
+        <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-600">
+          <ul class="list-disc pl-5 space-y-1">
+            <% @shoe.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div>
+        <%= f.label :name, "シューズ名", class: "block text-sm font-bold text-slate-700 mb-2" %>
+        <%= f.text_field :name, placeholder: "例：ナイキ ペガサス 41", class: "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200" %>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <%= f.label :size, "サイズ（cm）", class: "block text-sm font-bold text-slate-700 mb-2" %>
+          <%= f.number_field :size, value: 26.5, step: "0.5", class: "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200" %>
+        </div>
+        <div>
+          <%= f.label :width, "横幅（ワイズ）", class: "block text-sm font-bold text-slate-700 mb-2" %>
+          <%= f.select :width, [["選択してください", ""], ["D（標準・細め）", "D"], ["E（やや広い）", "E"], ["2E（広い）", "2E"], ["3E（とても広い）", "3E"], ["4E（超ワイド）", "4E"]], {}, { class: "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 cursor-pointer" } %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :total_distance, "現在の累計走行距離（km）", class: "block text-sm font-bold text-slate-700 mb-2" %>
+        <%= f.number_field :total_distance, value: 0.0, step: "0.1", class: "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200" %>
+        <p class="text-xs text-slate-500 mt-2">
+          ※すでに履いている靴の場合は、これまでの走行距離を入力してください。
+        </p>
+      </div>
+
+      <div class="pt-4 space-y-3">
+        <%= f.submit "シューズを登録する", class: "w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl shadow-lg shadow-blue-600/20 active:translate-y-0.5 transition-all duration-200 cursor-pointer text-center" %>
+        <%= link_to "一覧に戻る", shoes_path, class: "block w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3 rounded-xl text-center transition-all duration-200" %>
+      </div>
+
+    <% end %>
+
+  </div>
+</div>

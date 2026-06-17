@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "shoes/index"
+  get "shoes/new"
   get "up" => "rails/health#show", as: :rails_health_check
 
   # ユーザー管理（signup や login は手動のままで）
@@ -24,4 +26,8 @@ Rails.application.routes.draw do
       get :manage, action: :index 
     end
   end
+
+  # シューズ管理とジョギング記録
+  resources :shoes, only: [:index, :new, :create, :destroy]
+  resources :jogs, only: [:index, :new, :create, :destroy]
 end

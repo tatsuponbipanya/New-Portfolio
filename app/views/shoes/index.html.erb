@@ -1,0 +1,93 @@
+<div class="fixed inset-0 -z-20 bg-cover bg-center bg-no-repeat" 
+     style="background-image: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop');">
+</div>
+<div class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs -z-10"></div>
+
+<div class="relative min-h-screen px-4 py-12 sm:px-6 lg:px-8">
+  <div class="max-w-5xl mx-auto">
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-8 border-b border-white/20 mb-12">
+      <div>
+        <h1 class="text-4xl font-black tracking-tight text-white mb-2 drop-shadow-md">
+          MY SHOES
+        </h1>
+        <p class="text-xs font-bold text-slate-200 tracking-wider uppercase drop-shadow-sm">
+          Manage your running gears
+        </p>
+      </div>
+      <div class="mt-4 sm:mt-0">
+        <%= link_to "新しいシューズを登録する", new_shoe_path, class: "inline-block bg-blue-600 hover:bg-blue-500 text-white font-black px-6 py-4 rounded-xl shadow-lg shadow-blue-600/30 active:translate-y-0.5 transition-all duration-200 text-center" %>
+      </div>
+    </div>
+
+    <% if @shoes.any? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @shoes.each do |shoe| %>
+          <div class="bg-white/95 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl p-6 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-blue-500/10">
+            
+            <div>
+              <div class="flex items-start justify-between mb-4">
+                <h2 class="text-xl font-black text-slate-800 tracking-tight leading-snug">
+                  <%= shoe.name %>
+                </h2>
+                <span class="bg-blue-50 text-blue-600 text-xs font-extrabold px-2.5 py-1 rounded-md border border-blue-100 uppercase">
+                  <%= shoe.width %>
+                </span>
+              </div>
+
+              <div class="text-xs text-slate-500 space-y-1 mb-6">
+                <p>サイズ：<span class="font-bold text-slate-700"><%= shoe.size %> cm</span></p>
+                <p>目標基準：<span class="font-bold text-slate-700">500.0 km</span></p>
+              </div>
+
+              <div class="mb-6">
+                <div class="flex justify-between items-end text-sm mb-2">
+                  <span class="text-slate-500 font-medium">走行距離</span>
+                  <span class="font-black text-slate-800">
+                    <%= shoe.total_distance %> <span class="text-xs text-slate-500 font-normal">/ 500.0 km</span>
+                  </span>
+                </div>
+                
+                <% 
+                  current_dist = shoe.total_distance.to_f
+                  percentage = [((current_dist / 500.0) * 100).round, 100].min
+                  remaining_percentage = 100 - percentage
+                  
+                  if current_dist >= 700.0
+                    bar_color = "bg-red-600"
+                    status_text = "もう替えた方がいいよ！"
+                    text_color = "text-red-600"
+                  elsif current_dist >= 500.0
+                    bar_color = "bg-amber-500"
+                    status_text = "そろそろ替え時です！"
+                    text_color = "text-amber-600"
+                  else
+                    bar_color = "bg-green-500"
+                    status_text = "走行目標まで あと #{remaining_percentage}%"
+                    text_color = "text-slate-400"
+                  end
+                %>
+                
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                  <div class="<%= bar_color %> h-3 rounded-full transition-all duration-500" style="width: <%= percentage %>%"></div>
+                </div>
+                
+                <div class="text-right mt-2">
+                  <span class="text-xs font-black tracking-tight <%= text_color %>">
+                    <%= status_text %>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-4 mt-2 flex justify-end">
+              <%= button_to "この靴を削除する", shoe_path(shoe), method: :delete, form: { onsubmit: "return confirm('このシューズを一覧から削除してもよろしいですか？');" }, class: "text-xs font-bold text-slate-400 hover:text-red-500 transition-all duration-200 bg-transparent border-0 cursor-pointer p-0" %>
+            </div>
+
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+  </div>
+</div>
