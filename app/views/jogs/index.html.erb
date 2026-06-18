@@ -1,0 +1,64 @@
+<div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-md border border-slate-200 mt-8">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-black text-slate-800 flex items-center gap-2">
+      ランニングの記録履歴
+    </h2>
+    <%= link_to "新しいランニングを記録する", new_jog_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow transition text-sm" %>
+  </div>
+
+  <% if @jogs.blank? %>
+    <p class="text-slate-500 font-medium text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+      まだランニングの記録がありません。
+    </p>
+  <% else %>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse font-bold">
+        <thead>
+          <tr class="border-b-2 border-slate-200 bg-slate-100 text-slate-700 text-sm">
+            <th class="p-3">日付</th>
+            <th class="p-3">シューズ</th>
+            <th class="p-3">距離</th>
+            <th class="p-3">タイム</th>
+            <th class="p-3">ペース</th>
+            <th class="p-3">心拍数</th>
+            <th class="p-3">メモ</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 text-slate-700 font-medium text-sm">
+          <% @jogs.each do |jog| %>
+            <tr class="hover:bg-slate-50 transition duration-150">
+              <td class="p-3 whitespace-nowrap text-slate-600"><%= jog.date.strftime("%Y/%m/%d") if jog.date %></td>
+              <td class="p-3 text-blue-600"><%= jog.shoe.name %></td>
+              <td class="p-3 text-slate-900 font-black"><%= jog.distance %> km</td>
+              <td class="p-3 whitespace-nowrap">
+                <%= "#{jog.time_hour}時間 " if jog.time_hour.to_i > 0 %>
+                <%= "#{jog.time_minute}分" %><%= "#{jog.time_second}秒" %>
+              </td>
+              <td class="p-3 text-slate-500 whitespace-nowrap">
+                <% if jog.pace_minute.present? %>
+                  <%= "#{jog.pace_minute}'#{sprintf('%02d', jog.pace_second)}''/km" %>
+                <% else %>
+                  <span class="text-slate-300">-</span>
+                <% end %>
+              </td>
+              <td class="p-3 whitespace-nowrap">
+                <% if jog.heart_rate.present? %>
+                  <span class="text-red-500">❤️</span> <%= jog.heart_rate %> bpm
+                <% else %>
+                  <span class="text-slate-300">-</span>
+                <% end %>
+              </td>
+              <td class="p-3 text-xs text-slate-500 max-w-xs truncate" title="<%= jog.memo %>">
+                <%= jog.memo.presence || "-" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <div class="mt-6 text-center border-t pt-4">
+    <%= link_to "プロフィールへ戻る", user_path(@user), class: "text-sm text-slate-500 hover:text-slate-700 font-bold" %>
+  </div>
+</div>

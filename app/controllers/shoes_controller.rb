@@ -1,7 +1,8 @@
 class ShoesController < ApplicationController
 
   def index
-    @shoes = Shoe.all
+    @user = User.find(params[:user_id])
+    @shoes = @user.shoes
   end
 
   def new
@@ -10,6 +11,7 @@ class ShoesController < ApplicationController
 
   def create
     @shoe = Shoe.new(shoe_params)
+    @shoe.user_id = current_user.id
 
     # シューズの寿命は、500.0kmに設定
     @shoe.target_distance = 500.0
@@ -21,7 +23,7 @@ class ShoesController < ApplicationController
 
     if @shoe.save
       flash[:success] = "新しいシューズを登録しました。"
-      redirect_to shoes_path
+      redirect_to user_shoes_path(current_user)
     else
       flash.now[:danger] = "登録に失敗しました。入力欄を確認してください。"
       render :new, status: :unprocessable_entity
@@ -32,7 +34,7 @@ class ShoesController < ApplicationController
     @shoe = Shoe.find(params[:id])
     @shoe.destroy
     flash[:success] = "シューズを削除しました。"
-    redirect_to shoes_path, status: :see_other
+    redirect_to user_shoes_path(current_user), status: :see_other
   end
 
   private

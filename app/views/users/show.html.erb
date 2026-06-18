@@ -5,116 +5,29 @@
   <p class="text-xl font-bold"><%= @user.name %></p>
 </div>
 
-<%# 自己紹介文の表示エリア %>
 <div class="mb-6 font-bold">
   <p class="text-gray-600 text-sm">自己紹介文</p>
-  <div class="mt-1 p-3 bg-gray-50 rounded border text-gray-800 whitespace-pre-wrap w-full"><%= @user.introduction.present? ? @user.introduction : "自己紹介はまだ未設定です" %></div>
+  <div class="mt-1 p-3 bg-gray-50 rounded border text-gray-800 whitespace-pre-wrap w-full">
+    <%= @user.introduction.present? ? @user.introduction : "自己紹介はまだ未設定です" %>
+  </div>
 </div>
 
-<%# 編集画面へ戻るためのリンクボタン %>
-<%= link_to "プロフィールを編集する", edit_user_path(@user), class: "block text-center bg-emerald-500 text-white font-bold p-2 rounded hover:bg-emerald-600 max-w-md mx-auto" %>
+<% if @user == current_user %>
+  <div class="mb-8">
+    <%= link_to "プロフィールを編集する", edit_user_path(@user), class: "block text-center bg-slate-500 text-white font-bold p-2 rounded hover:bg-slate-600 max-w-md mx-auto" %>
+  </div>
+<% end %>
 
-<h2 class="text-xl font-bold mt-10 mb-4">トレーニング比率（ボリューム）</h2>
-<p class="text-sm text-slate-500 mb-6">
-  ※各部位の負荷（重量×回数）に基づいた分析です。
-</p>
-
-<%# Google Chartsの読み込み %>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-<%# Chartkick本体を直接読み込む %>
-<script type="text/javascript" src="https://unpkg.com/chartkick@5.0.0/dist/chartkick.js"></script>
-
-<%# グラフ描画エリア %>
-<div id="chart-area" style="height: 300px; width: 100%;"></div>
-
-<script type="text/javascript">
-  window.onload = function() {
-    // ここで @chart_data をJavaScript側に渡す
-    // .to_json を使うと、RubyのデータがJSでも使える形に変換される
-    var chartData = <%= @chart_data.to_json.html_safe %>;
-    
-    // グラフのデザイン
-    new Chartkick.PieChart("chart-area", chartData, {
-      donut: true,                     // ドーナツ型にするなら true
-      colors: ["#3b82f6", "#ef4444", "#10b981", "#f59e0b", "#8b5cf6"], // 好きな色に変える
-      library: {                       // Google Chartsの細かい設定
-        pieSliceText: 'percentage',    // 中身を「パーセント」表示にする
-        chartArea: { width: '85%', height: '85%' }
-      },
-      empty: "まだ筋トレ記録がありません"
-    });
-  }
-</script>
-
-<% #区切り線 %>
-<hr class="my-10 border-0 border-t-2 border-dashed border-slate-300">
-
-<h2 class="text-xl font-bold text-slate-800 mb-4">🏋️‍♂️ 過去の筋トレ記録一覧</h2>
-<div class="workout-logs-list overflow-x-auto bg-white rounded shadow p-4 mb-16">
-  <% if @workout_logs && @workout_logs.any? %>
-    <table class="w-full border-collapse text-left font-bold">
-      <thead>
-        <tr class="bg-slate-100 border-b-2 border-slate-200 text-slate-700">
-          <th class="p-3">日付</th>
-          <th class="p-3">種目名</th>
-          <th class="p-3">セット内容</th>
-          <th class="p-3">推定1RM</th>
-          <th class="p-3">操作</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-100">
-        <%# 日付と種目名でグループ化 %>
-        <% @workout_logs.group_by { |log| [log.workout_date.strftime("%Y/%m/%d %H:%M"), log.menu_type] }.each do |(date_str, menu_type), logs| %>
-          <tr class="hover:bg-slate-50 transition duration-150">
-            <%# 1. 日付 %>
-            <td class="p-3 text-slate-600"><%= date_str %></td>
-
-            <%# 2. 種目名 %>
-            <td class="p-3">
-              <%= link_to menu_type, analytics_path(@user, anchor: menu_type), class: "text-blue-600 hover:text-blue-800 hover:underline font-bold" %>
-            </td>
-
-            <%# 3. セット内容（縦並びにして、右隣の1RMと高さが揃うように） %>
-            <td class="p-3 text-slate-800">
-              <div class="space-y-1">
-                <% logs.each_with_index do |log, index| %>
-                  <div class="block text-sm py-0.5">
-                    <span class="text-slate-500 text-xs w-12 inline-block"><%= index + 1 %>set:</span>
-                    <span><strong><%= log.weight %></strong> kg × <strong><%= log.reps %></strong> 回</span>
-                  </div>
-                <% end %>
-              </div>
-            </td>
-
-            <%# 4. 推定1RM %>
-            <td class="p-3">
-              <div class="space-y-1">
-                <% logs.each do |log| %>
-                  <div class="py-0.5">
-                    <span class="text-[11px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-full font-normal inline-block">
-                      1RM: <%= log.estimated_1rm %>kg
-                    </span>
-                  </div>
-                <% end %>
-              </div>
-            </td>
-
-            <%# 5. 操作（まとまった単位の「最初のログ」を削除する） %>
-            <td class="p-3">
-             <% if @user == current_user %>
-              <%= button_to "削除", workout_log_path(logs.first), method: :delete, 
-                            onclick: "return confirm('この種目の記録（全#{logs.count}セット）を削除して良いですか？');", 
-                            class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-3 rounded text-xs cursor-pointer transition" %>
-             <% else %>
-                <span class="text-slate-400 text-xs">閲覧のみ</span>
-             <% end %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <p class="text-slate-500 italic">まだ記録がありません。</p>
-  <% end %>
-</div>
+  <%# 左側：筋トレグループ %>
+  <div class="flex-1 flex flex-col gap-2 p-2 bg-blue-50/50 border border-blue-100 rounded-xl">
+    <span class="text-[10px] text-blue-500 uppercase tracking-widest pl-1">Muscle Training</span>
+    <%= link_to "筋トレ記録を見る", user_workout_logs_path(@user), class: "w-full text-center bg-blue-600 text-white p-2.5 rounded-lg hover:bg-blue-700 shadow transition text-xs whitespace-nowrap" %>
+    <%= link_to "推定MAX（1RM）の遷移", analytics_path(@user), class: "w-full text-center bg-blue-500 text-white p-2.5 rounded-lg hover:bg-blue-600 shadow transition text-xs whitespace-nowrap" %>
+  </div>
+  
+  <%# 右側：ランニンググループ %>
+  <div class="flex-1 flex flex-col gap-2 p-2 bg-orange-50/50 border border-orange-100 rounded-xl">
+    <span class="text-[10px] text-orange-500 uppercase tracking-widest pl-1">Running</span>
+    <div class="text-[10px] h-3"></div> 
+    <%= link_to "ランニング記録を見る", user_jogs_path(@user), class: "w-full text-center bg-orange-500 text-white p-2.5 rounded-lg hover:bg-orange-600 shadow transition text-xs whitespace-nowrap mt-auto" %>
+  </div>

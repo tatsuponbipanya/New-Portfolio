@@ -6,6 +6,7 @@ class User < ApplicationRecord
     #dependent: :destroyをつけることでユーザーを消す時、データも一緒に消せる。
     has_many :workout_logs, dependent: :destroy
     has_many :workout_templates, dependent: :destroy
+    has_many :shoes, dependent: :destroy
 
     validates :name, presence: true
     validates :email, presence: true, uniqueness: true

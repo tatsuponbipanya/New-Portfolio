@@ -24,12 +24,6 @@ before_action :ensure_correct_user, only: [:edit, :update]
 
   def show
     @user = User.find(params[:id])
-    @workout_logs = @user.workout_logs.order(workout_date: :desc)
-
-    # グラフ用（トレーニング比率の方）。過去の記録をgroup_byで部位ごとに分け、mapで配列を作り直す（{部位・ボリュームの合計}　の形へ）。グラフ用のデータは、to_hでハッシュ化する必要がある。
-    @chart_data = @workout_logs.group_by(&:body_part).map do |part, logs|
-      [part, logs.sum { |log| log.weight * log.reps }]
-    end.to_h
   end
 
   # before_actionのensure_correct_userで@userを見つけているため、editには何も書かなくて良い。

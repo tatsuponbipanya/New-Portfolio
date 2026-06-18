@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_17_073054) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_18_032055) do
   create_table "jogs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "date"
@@ -20,6 +20,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_17_073054) do
     t.integer "pace_minute"
     t.integer "pace_second"
     t.integer "shoe_id", null: false
+    t.integer "time_hour"
     t.integer "time_minute"
     t.integer "time_second"
     t.datetime "updated_at", null: false
@@ -33,7 +34,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_17_073054) do
     t.float "target_distance"
     t.float "total_distance"
     t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
     t.string "width"
+    t.index ["user_id"], name: "index_shoes_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -76,6 +79,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_17_073054) do
   end
 
   add_foreign_key "jogs", "shoes"
+  add_foreign_key "shoes", "users"
   add_foreign_key "workout_logs", "users"
   add_foreign_key "workout_template_sets", "workout_templates"
   add_foreign_key "workout_templates", "users"

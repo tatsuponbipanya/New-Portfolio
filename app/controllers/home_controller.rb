@@ -59,6 +59,18 @@ class HomeController < ApplicationController
     end
   end
 
+  # 筋トレ記録表示
+  def workout_logs
+    @user = User.find(params[:id])
+    # ユーザーの過去の筋トレ記録を、日付の新しい順に取得
+    @workout_logs = @user.workout_logs.order(workout_date: :desc)
+
+    # 筋トレ比率（円グラフ用）のデータを部位ごとに集計してハッシュ化
+    @chart_data = @workout_logs.group_by(&:body_part).map do |part, logs|
+      [part, logs.sum { |log| log.weight * log.reps }]
+    end.to_h
+  end
+
   # カプセル化（隠蔽）。外からURL（インターネット）経由で呼び出せないメソッド。
   private
 

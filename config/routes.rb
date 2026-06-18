@@ -1,12 +1,5 @@
 Rails.application.routes.draw do
-  get "shoes/index"
-  get "shoes/new"
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # ユーザー管理（signup や login は手動のままで）
-  get 'signup', to: 'users#new'
-  post 'users', to: 'users#create'
-  resources :users, only: [:index, :show, :edit, :update]
 
   # ログイン・ログアウト
   get '/login', to: 'sessions#new'
@@ -16,6 +9,7 @@ Rails.application.routes.draw do
   # 筋トレのデータ記録（トップページは home のままでOK）
   root 'home#index'
   get 'users/:id/analytics', to: 'home#analytics', as: :analytics
+  get 'users/:id/workout_logs', to: 'home#workout_logs', as: :user_workout_logs
   post 'workout_logs', to: 'home#create', as: :workout_logs
   delete 'workout_logs/:id', to: 'home#destroy', as: :workout_log
 
@@ -27,7 +21,15 @@ Rails.application.routes.draw do
     end
   end
 
+  # ユーザー管理（signup や login は手動のままで）
+  get 'signup', to: 'users#new'
+  post 'users', to: 'users#create'
+
   # シューズ管理とジョギング記録
-  resources :shoes, only: [:index, :new, :create, :destroy]
-  resources :jogs, only: [:index, :new, :create, :destroy]
+  resources :users, only: [:index, :show, :edit, :update] do
+    resources :jogs, only: [:index]
+    resources :shoes, only: [:index]
+  end
+    resources :shoes, only: [:new, :create, :destroy]
+    resources :jogs, only: [:new, :create, :destroy]
 end

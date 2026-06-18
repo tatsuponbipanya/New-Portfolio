@@ -45,6 +45,15 @@
   <%# --- 右側：全部メニューに集約！ --- %>
   <div class="flex items-center gap-4">
     <% if current_user %>
+      <div class="flex items-center bg-blue-50 border border-emerald-100 rounded-full px-3 py-1.5 shadow-sm">
+        <span class="text-xs font-extrabold text-blue-700 tracking-wide">
+          <%= current_user.name %>
+        </span>
+        <span class="text-[10px] font-bold text-emerald-600 ml-1">
+          online
+        </span>
+      </div>
+
       <div x-data="{ open: false }" class="relative" @click.away="open = false">
         <button @click="open = !open" class="bg-slate-100 hover:bg-slate-200 font-bold py-2 px-4 rounded-md text-sm border border-slate-200 flex items-center gap-1 cursor-pointer">
           メニュー ▾
@@ -53,22 +62,21 @@
         <div x-show="open" x-transition class="absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-xl py-2 z-50 font-bold text-sm" style="display: none;">
           <p class="px-4 py-1 text-[10px] text-slate-400 uppercase tracking-widest">Muscle Training</p>
           <%= link_to "筋トレを始める！", root_path, class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
-          <%= link_to "マイページ・記録一覧", user_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
-          <%= link_to "推定MAX（1RM）の遷移", analytics_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
           <%= link_to "テンプレート作成", new_workout_template_path, class: "block px-4 py-2 text-slate-700 hover:bg-emerald-50" %>
           <%= link_to "テンプレート管理", manage_workout_templates_path, class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
           
           <hr class="border-slate-100 my-2">
           
           <p class="px-4 py-1 text-[10px] text-slate-400 uppercase tracking-widest">Running</p>
-          <%= link_to "ランニングを記録！", "#", class: "block px-4 py-2 text-emerald-700 hover:bg-emerald-50" %>
-          <%= link_to "マイシューズ", shoes_path, class: "block px-4 py-2 text-emerald-700 hover:bg-emerald-50" %>
+          <%= link_to "ランニングを記録！", new_jog_path, class: "block px-4 py-2 text-emerald-700 hover:bg-emerald-50" %>
+          <%= link_to "マイシューズ登録", new_shoe_path , class: "block px-4 py-2 text-emerald-700 hover:bg-emerald-50" %>
+          <%= link_to "マイシューズ一覧", user_shoes_path(current_user), class: "block px-4 py-2 text-emerald-700 hover:bg-emerald-50" %>
           
           <hr class="border-slate-100 my-2">
           
           <p class="px-4 py-1 text-[10px] text-slate-400 uppercase tracking-widest">Account</p>
+          <%= link_to "マイページ・記録一覧", user_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
           <%= link_to "友達一覧", users_path, class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
-          <%= link_to "プロフィール編集", edit_user_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-slate-100" %>
           <%= button_to "ログアウト", logout_path, method: :delete, class: "w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 cursor-pointer" %>
         </div>
       </div>
