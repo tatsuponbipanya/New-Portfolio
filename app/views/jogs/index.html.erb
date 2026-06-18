@@ -1,9 +1,12 @@
-<div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-md border border-slate-200 mt-8">
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-black text-slate-800 flex items-center gap-2">
+  <%# flex-col（縦並び）を基本にして、スマホのときは gap-y-3 で上下に余白を作る %>
+  <%# sm:flex-row（パソコンでは横並び）にして、左右の端にバランスよく配置する %>
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-y-3 mb-6">
+    <h2 class="text-xl sm:text-2xl font-black text-slate-800 flex items-center gap-2">
       ランニングの記録履歴
     </h2>
-    <%= link_to "新しいランニングを記録する", new_jog_path, class: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow transition text-sm" %>
+    <div class="flex-shrink-0">
+      <%= link_to "新しく記録する", new_user_jog_path(@user), class: "inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow transition text-sm text-center" %>
+    </div>
   </div>
 
   <% if @jogs.blank? %>
@@ -11,7 +14,85 @@
       まだランニングの記録がありません。
     </p>
   <% else %>
-    <div class="overflow-x-auto">
+
+    <%# === 1. スマホ用レイアウト === %>
+    <div class="block sm:hidden space-y-4 mb-6">
+      <% @jogs.each do |jog| %>
+        <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 font-bold relative">
+          
+          <%# 日付と削除ボタンの行 %>
+          <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
+            <span class="text-xs text-slate-500 flex items-center gap-1">
+              📅 <%= jog.date.strftime("%Y/%m/%d") if jog.date %>
+            </span>
+            <div>
+              <% if @user == current_user %>
+                <%= button_to "削除", user_jog_path(@user, jog), method: :delete, 
+                              onclick: "return confirm('このランニング記録を削除して良いですか？');", 
+                              class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-2.5 rounded text-[11px] cursor-pointer transition shadow-sm" %>
+              <% else %>
+                <span class="text-slate-400 text-[11px]">閲覧のみ</span>
+              <% end %>
+            </div>
+          </div>
+
+          <%# メイン情報（ラベルを付けてパッと見でわかるように） %>
+          <div class="grid grid-cols-2 gap-2 mb-3 bg-white p-2.5 rounded-lg border border-slate-100 shadow-sm">
+            <div class="text-center border-r border-slate-100">
+              <span class="block text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">距離</span>
+              <span class="text-base text-slate-900 font-black"><%= jog.distance %> <span class="text-xs font-bold text-slate-500">km</span></span>
+            </div>
+            <div class="text-center">
+              <span class="block text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">タイム</span>
+              <span class="text-sm text-slate-800 font-black">
+                <%= "#{jog.time_hour}h " if jog.time_hour.to_i > 0 %>
+                <%= "#{jog.time_minute}分" %><%= "#{jog.time_second}秒" %>
+              </span>
+            </div>
+          </div>
+
+          <%# 詳細情報（シューズ・ペース・心拍数） %>
+          <div class="bg-white border border-slate-100 rounded-lg p-3 space-y-2 text-xs text-slate-600 shadow-sm">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 font-medium">👟 シューズ:</span>
+              <%= link_to jog.shoe.name, user_shoes_path(@user), class: "text-blue-600 font-black bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded hover:underline transition" %>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 font-medium">⏱️ ペース:</span>
+              <span class="font-bold text-slate-700">
+                <% if jog.pace_minute.present? %>
+                  <%= "#{jog.pace_minute}'#{sprintf('%02d', jog.pace_second)}''/km" %>
+                <% else %>
+                  -
+                <% end %>
+              </span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 font-medium">💓 平均心拍数:</span>
+              <span class="font-bold text-slate-700">
+                <% if jog.heart_rate.present? %>
+                  <span class="text-red-500">❤️</span> <%= jog.heart_rate %> bpm
+                <% else %>
+                  -
+                <% end %>
+              </span>
+            </div>
+          </div>
+
+          <%# メモがある場合だけ表示 %>
+          <% if jog.memo.present? %>
+            <div class="mt-2.5 text-xs text-slate-500 bg-slate-100 rounded-lg p-2.5 font-medium border border-slate-200">
+              <span class="block text-[10px] text-slate-400 font-bold mb-1">📝 メモ</span>
+              <%= jog.memo %>
+            </div>
+          <% end %>
+
+        </div>
+      <% end %>
+    </div>
+
+    <%# === 2. PC・タブレット用レイアウト（スマホでは非表示、画面が広いときだけテーブル表示） === %>
+    <div class="hidden sm:block overflow-x-auto">
       <table class="w-full text-left border-collapse font-bold">
         <thead>
           <tr class="border-b-2 border-slate-200 bg-slate-100 text-slate-700 text-sm">
@@ -20,16 +101,25 @@
             <th class="p-3">距離</th>
             <th class="p-3">タイム</th>
             <th class="p-3">ペース</th>
-            <th class="p-3">心拍数</th>
+            <th class="p-3">平均心拍数</th>
             <th class="p-3">メモ</th>
+            <th class="p-3">操作</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100 text-slate-700 font-medium text-sm">
           <% @jogs.each do |jog| %>
             <tr class="hover:bg-slate-50 transition duration-150">
               <td class="p-3 whitespace-nowrap text-slate-600"><%= jog.date.strftime("%Y/%m/%d") if jog.date %></td>
-              <td class="p-3 text-blue-600"><%= jog.shoe.name %></td>
+
+              <%# シューズ %>
+              <td class="p-3">
+                <%= link_to jog.shoe.name, user_shoes_path(@user), class: "text-blue-600 hover:text-blue-800 hover:underline font-bold" %>
+              </td>
+
+              <%# 距離 %>
               <td class="p-3 text-slate-900 font-black"><%= jog.distance %> km</td>
+
+              <%# タイム %>
               <td class="p-3 whitespace-nowrap">
                 <%= "#{jog.time_hour}時間 " if jog.time_hour.to_i > 0 %>
                 <%= "#{jog.time_minute}分" %><%= "#{jog.time_second}秒" %>
@@ -41,6 +131,8 @@
                   <span class="text-slate-300">-</span>
                 <% end %>
               </td>
+
+              <%# 心拍数 %>
               <td class="p-3 whitespace-nowrap">
                 <% if jog.heart_rate.present? %>
                   <span class="text-red-500">❤️</span> <%= jog.heart_rate %> bpm
@@ -48,8 +140,21 @@
                   <span class="text-slate-300">-</span>
                 <% end %>
               </td>
+
+              <%# メモ %>
               <td class="p-3 text-xs text-slate-500 max-w-xs truncate" title="<%= jog.memo %>">
                 <%= jog.memo.presence || "-" %>
+              </td>
+
+              <td class="p-3 whitespace-nowrap">
+                <% if @user == current_user %>
+                  <%= button_to "削除", user_jog_path(@user, jog), method: :delete, 
+                                onclick: "return confirm('このランニング記録を削除して良いですか？');", 
+                                form: { class: "inline-block" },
+                                class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-3 rounded text-xs cursor-pointer transition" %>
+                <% else %>
+                  <span class="text-slate-400 text-xs">閲覧のみ</span>
+                <% end %>
               </td>
             </tr>
           <% end %>

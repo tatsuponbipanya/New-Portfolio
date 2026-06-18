@@ -1,9 +1,4 @@
-# app/controllers/home_controller.rb
-class HomeController < ApplicationController
-  # ログインしていなかったら、ログイン画面へリダイレクト
-  before_action :require_login
-  # ただし、トップページのみは表示可能
-  skip_before_action :require_login, only: [:index]
+class WorkoutLogsController < ApplicationController
 
   def index
     if current_user
@@ -59,7 +54,7 @@ class HomeController < ApplicationController
     end
   end
 
-  # 筋トレ記録表示
+  # 筋トレ記録＋円グラフ
   def workout_logs
     @user = User.find(params[:id])
     # ユーザーの過去の筋トレ記録を、日付の新しい順に取得
@@ -69,17 +64,5 @@ class HomeController < ApplicationController
     @chart_data = @workout_logs.group_by(&:body_part).map do |part, logs|
       [part, logs.sum { |log| log.weight * log.reps }]
     end.to_h
-  end
-
-  # カプセル化（隠蔽）。外からURL（インターネット）経由で呼び出せないメソッド。
-  private
-
-  # セキュリティ。ちゃんとworkout_formのデータがあるかのチェックと、日付、メニュー名、重量、回数の4つのデータだけを通過許可。
-  def workout_form_params
-    params.require(:workout_form).permit(
-      :workout_date,
-      :menu_type,
-      sets_attributes: [:weight, :reps]
-    )
   end
 end

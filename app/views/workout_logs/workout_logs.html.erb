@@ -1,0 +1,143 @@
+<div class="max-w-4xl mx-auto bg-white p-4 sm:p-6 rounded-xl shadow-md border border-slate-200 mt-8">
+  <h1 class="text-xl sm:text-2xl font-bold mb-6 text-center text-slate-800"><%= @user.name %> さんの筋トレ記録一覧</h1>
+
+  <h2 class="text-lg sm:text-xl font-bold mt-6 mb-4">トレーニング比率（ボリューム）</h2>
+  <p class="text-sm text-slate-500 mb-6">※各部位の負荷（重量×回数）に基づいた分析です。</p>
+
+  <%# Google Chartsの読み込み %>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <%# Chartkick本体を直接読み込む %>
+  <script type="text/javascript" src="https://unpkg.com/chartkick@5.0.0/dist/chartkick.js"></script>
+
+  <div id="chart-area" style="height: 300px; width: 100%;"></div>
+
+  <script type="text/javascript">
+    window.onload = function() {
+      var chartData = <%= @chart_data.to_json.html_safe %>;
+      new Chartkick.PieChart("chart-area", chartData, {
+        donut: true,
+        colors: ["#3b82f6", "#ef4444", "#10b981", "#f59e0b", "#8b5cf6"],
+        library: {
+          pieSliceText: 'percentage',
+          chartArea: { width: '85%', height: '85%' }
+        },
+        empty: "まだ筋トレ記録がありません"
+      });
+    }
+  </script>
+
+  <hr class="my-10 border-0 border-t-2 border-dashed border-slate-300">
+
+  <h2 class="text-lg sm:text-xl font-bold text-slate-800 mb-4">筋トレ実績一覧</h2>
+
+  <% if @workout_logs && @workout_logs.any? %>
+    
+    <%# === 1. スマホ用レイアウト（デフォルト表示、PCでは非表示 hidden sm:blockなし） === %>
+    <div class="block sm:hidden space-y-4 mb-6">
+      <% @workout_logs.group_by { |log| [log.workout_date.strftime("%Y/%m/%d %H:%M"), log.menu_type] }.each do |(date_str, menu_type), logs| %>
+        <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 font-bold relative">
+          
+          <%# 日付と操作ボタンの行 %>
+          <div class="flex justify-between items-start mb-2">
+            <span class="text-xs text-slate-500"><%= date_str %></span>
+            <div>
+              <% if @user == current_user %>
+                <%= button_to "削除", workout_log_path(logs.first), method: :delete, 
+                              onclick: "return confirm('この種目の記録（全#{logs.count}セット）を削除して良いですか？');", 
+                              class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-2 rounded text-[11px] cursor-pointer transition" %>
+              <% else %>
+                <span class="text-slate-400 text-[11px]">閲覧のみ</span>
+              <% end %>
+            </div>
+          </div>
+
+          <%# 種目名 %>
+          <div class="mb-3">
+            <%= link_to menu_type, analytics_path(@user, anchor: menu_type), class: "text-blue-600 hover:text-blue-800 hover:underline text-base font-bold" %>
+          </div>
+
+          <%# セット内容と1RMのリスト %>
+          <div class="bg-white border border-slate-100 rounded p-2 space-y-2">
+            <% logs.each_with_index do |log, index| %>
+              <div class="flex justify-between items-center text-sm">
+                <div>
+                  <span class="text-slate-500 text-xs w-10 inline-block"><%= index + 1 %>set:</span>
+                  <span class="text-slate-800"><strong><%= log.weight %></strong> kg × <strong><%= log.reps %></strong> 回</span>
+                </div>
+                <span class="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-full font-normal">
+                  1RM: <%= log.estimated_1rm %>kg
+                </span>
+              </div>
+            <% end %>
+          </div>
+
+        </div>
+      <% end %>
+    </div>
+
+    <%# === 2. PC・タブレット用レイアウト（スマホでは非表示 hidden、sm以上の画面で表示 block） === %>
+    <div class="hidden sm:block workout-logs-list overflow-x-auto rounded-xl border border-slate-200 bg-white mb-6">
+      <table class="w-full border-collapse text-left font-bold">
+        <thead>
+          <tr class="bg-slate-100 border-b-2 border-slate-200 text-slate-700">
+            <th class="p-3 text-sm">日付</th>
+            <th class="p-3 text-sm">種目名</th>
+            <th class="p-3 text-sm">セット内容</th>
+            <th class="p-3 text-sm">推定1RM</th>
+            <th class="p-3 text-sm">操作</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <% @workout_logs.group_by { |log| [log.workout_date.strftime("%Y/%m/%d %H:%M"), log.menu_type] }.each do |(date_str, menu_type), logs| %>
+            <tr class="hover:bg-slate-50 transition duration-150">
+              <td class="p-3 text-slate-600 text-sm whitespace-nowrap align-top"><%= date_str %></td>
+              <td class="p-3 text-sm align-top">
+                <%= link_to menu_type, analytics_path(@user, anchor: menu_type), class: "text-blue-600 hover:text-blue-800 hover:underline font-bold" %>
+              </td>
+              <td class="p-3 text-slate-800 align-top">
+                <div class="flex flex-col space-y-1">
+                  <% logs.each_with_index do |log, index| %>
+                    <div class="flex items-center text-sm h-6">
+                      <span class="text-slate-500 text-xs w-12 inline-block"><%= index + 1 %>set:</span>
+                      <span><strong><%= log.weight %></strong> kg × <strong><%= log.reps %></strong> 回</span>
+                    </div>
+                  <% end %>
+                </div>
+              </td>
+              <td class="p-3 align-top">
+                <div class="flex flex-col space-y-1">
+                  <% logs.each do |log| %>
+                    <div class="flex items-center h-6">
+                      <span class="text-[11px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-full font-normal inline-block">
+                        1RM: <%= log.estimated_1rm %>kg
+                      </span>
+                    </div>
+                  <% end %>
+                </div>
+              </td>
+              <td class="p-3 align-top">
+                <% if @user == current_user %>
+                  <%= button_to "削除", workout_log_path(logs.first), method: :delete, 
+                                onclick: "return confirm('この種目の記録（全#{logs.count}セット）を削除して良いですか？');", 
+                                form: { class: "inline-block" },
+                                class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-3 rounded text-xs cursor-pointer transition" %>
+                <% else %>
+                  <span class="text-slate-400 text-xs inline-block pt-1">閲覧のみ</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  <% else %>
+    <div class="bg-white rounded-xl border border-slate-200 p-6 text-center mb-6">
+      <p class="text-slate-500 italic">まだ記録がありません。</p>
+    </div>
+  <% end %>
+
+  <div class="text-center mt-6">
+    <%= link_to "プロフィールへ戻る", user_path(@user), class: "text-sm text-slate-500 hover:text-slate-700 font-bold" %>
+  </div>
+</div>
