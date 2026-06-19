@@ -77,7 +77,8 @@ class WorkoutLogsController < ApplicationController
   def workout_form_params
     params.require(:workout_form).permit(
       :workout_date,
-      workout_logs_attributes: [:id, :workout_type_id, :weight, :reps, :set_number, :menu_type, :body_part]
+      :menu_type,
+      sets_attributes: [:id, :workout_type_id, :weight, :reps, :set_number, :menu_type, :body_part]
     )
   end
 end
