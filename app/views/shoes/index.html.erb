@@ -7,7 +7,7 @@
   <div class="max-w-5xl mx-auto">
     
     <%# ヘッダーエリア %>
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-8 border-b border-white/20 mb-12">
+    <div class="border-b border-white/20 pb-6 mb-12">
       <div>
         <h1 class="text-4xl font-black tracking-tight text-white mb-2 drop-shadow-md">
           <%= @user.name %>さんのMY SHOES
@@ -16,15 +16,17 @@
           Manage your running gears
         </p>
       </div>
-      <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3 items-center w-full sm:w-auto">
-        <%= link_to "新しいシューズを登録する", new_shoe_path, class: "w-full sm:w-52 bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl shadow-lg shadow-blue-600/20 active:translate-y-0.5 transition-all duration-200 text-center text-sm" %>
-        <%= link_to "ランニングを記録する", new_user_jog_path(current_user), class: "w-full sm:w-52 bg-emerald-500 hover:bg-emerald-400 text-white font-black py-4 rounded-xl shadow-lg shadow-emerald-500/20 active:translate-y-0.5 transition-all duration-200 text-center text-sm" %>
+      
+      <%# ボタンエリア %>
+      <div class="mt-6 flex flex-col sm:flex-row gap-3 w-full">
+        <%= link_to "新しいシューズを登録する", new_shoe_path, class: "flex-1 bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl shadow-lg shadow-blue-600/20 active:translate-y-0.5 transition-all duration-200 text-center text-sm" %>
+        <%= link_to "ランニングを記録する", new_user_jog_path(current_user), class: "flex-1 bg-emerald-500 hover:bg-emerald-400 text-white font-black py-4 rounded-xl shadow-lg shadow-emerald-500/20 active:translate-y-0.5 transition-all duration-200 text-center text-sm" %>
       </div>
     </div>
 
     <%# シューズ一覧のグリッド %>
     <% if @shoes.any? %>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 gap-6 max-w-2xl mx-auto">
         <% @shoes.each do |shoe| %>
           <div class="bg-white/95 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl p-6 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-blue-500/10">
             
@@ -45,30 +47,29 @@
                 <% else %>
                   <p>購入日：<span class="font-bold text-slate-400 italic">未登録</span></p>
                 <% end %>
-                <p>耐用基準：<span class="font-bold text-slate-700">500.0 km / 3年 (経年劣化)</span></p>
+                <p>耐用基準：<span class="font-bold text-slate-700">500.0 km / 2年 (経年劣化)</span></p>
               </div>
 
               <%# === 📊 各種メーターの計算エリア === %>
               <% 
                 # ① 走行距離の計算
                 current_dist = shoe.total_distance.to_f
-                dist_percentage = [((current_dist / 500.0) * 100).round, 100].min
+                dist_percentage = [((current_dist / 700.0) * 100).round, 100].min
                 
-                # ② 経過年数の計算（3年＝1095日として計算）
+                # ② 経過年数の計算（2年＝730日として計算）
                 if shoe.bought_on.present?
                   passed_days = (Date.today - shoe.bought_on.to_date).to_i
-                  time_percentage = [((passed_days / 1095.0) * 100).round, 100].min
-                  # 経過年数を少数第1位まで計算（例: 1.5年）
-                  passed_years = (passed_days / 365.0).round(1)
+                  time_percentage = [((passed_days / 730.0) * 100).round, 100].min
+                  # 経過年数を少数第1位まで計算（例: 1.5年）　余りは切り捨て
+                  passed_years = (passed_days / 365.0).floor(1)
                 else
                   time_percentage = 0
                   passed_years = 0.0
                 end
 
-                # ③ 総合的な警告判定（距離が700km以上、または3年以上経過）
-                is_expired = current_dist >= 700.0 || (shoe.bought_on.present? && shoe.bought_on < Date.today - 3.years)
-                # 警告間近（距離が500km以上、または30ヶ月以上経過）
-                is_warning = current_dist >= 500.0 || (shoe.bought_on.present? && shoe.bought_on < Date.today - 30.months)
+                # ③ 総合的な警告判定（距離が700km以上、または2年以上経過）
+                is_expired = current_dist >= 700.0 || passed_years >= 2.0
+                is_warning = current_dist >= 500.0 || passed_years >= 1.5
 
                 if is_expired
                   status_text = "もう替えた方がいいよ！"
@@ -88,24 +89,24 @@
                   <div class="flex justify-between items-end text-xs mb-1">
                     <span class="text-slate-500 font-medium">🏃‍♂️ 走行距離</span>
                     <span class="font-black text-slate-800">
-                      <%= shoe.total_distance %> <span class="text-slate-400 font-normal">/ 500.0 km</span>
+                      <%= shoe.total_distance %> <span class="text-slate-400 font-normal">/ 700.0 km</span>
                     </span>
                   </div>
                   <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                    <div class="<%= current_dist >= 500.0 ? 'bg-amber-500' : 'bg-blue-500' %> h-2.5 rounded-full transition-all duration-500" style="width: <%= dist_percentage %>%"></div>
+                    <div class="<%= current_dist >= 700.0 ? 'bg-red-500' : (current_dist >= 500.0 ? 'bg-amber-500' : 'bg-blue-500') %> h-2.5 rounded-full transition-all duration-500" style="width: <%= dist_percentage %>%"></div>
                   </div>
                 </div>
 
-                <%# 📅 メーター2：経過年数（3年でMAX） %>
+                <%# 📅 メーター2：経過年数（2年でMAX） %>
                 <div>
                   <div class="flex justify-between items-end text-xs mb-1">
                     <span class="text-slate-500 font-medium">📅 経過年数</span>
                     <span class="font-black text-slate-800">
-                      <%= passed_years %> <span class="text-slate-400 font-normal">/ 3.0 年</span>
+                      <%= passed_years %> <span class="text-slate-400 font-normal">/ 2.0 年</span>
                     </span>
                   </div>
                   <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                    <div class="<%= passed_years >= 3.0 ? 'bg-red-500' : (passed_years >= 2.5 ? 'bg-amber-500' : 'bg-emerald-500') %> h-2.5 rounded-full transition-all duration-500" style="width: <%= time_percentage %>%"></div>
+                    <div class="<%= passed_years >= 2.0 ? 'bg-red-500' : (passed_years >= 1.5 ? 'bg-amber-500' : 'bg-emerald-500') %> h-2.5 rounded-full transition-all duration-500" style="width: <%= time_percentage %>%"></div>
                   </div>
                 </div>
 
