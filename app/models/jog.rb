@@ -17,8 +17,11 @@ class Jog < ApplicationRecord
   # 保存する前に自動でペースを計算するコールバックを設定
   before_save :calculate_pace
 
-  # ジョグデータが新しくデータベースに保存された「直後」に、自動で計算を実行
+  # ジョグデータが新しくデータベースに保存された「直後」に、自動で走行距離を加算
   after_create :add_distance_to_shoe
+
+  # ジョグデータが削除された「直後」に、走行距離の引き算を実行
+  after_destroy :subtract_distance_from_shoe
 
   private
 
@@ -42,5 +45,14 @@ class Jog < ApplicationRecord
   def add_distance_to_shoe
     new_total = shoe.total_distance.to_f + distance
     shoe.update!(total_distance: new_total)
+  end
+
+  # 紐付いているシューズを引っ張ってきて、削除されたジョグの距離を減算して保存
+  def subtract_distance_from_shoe
+    # 今のシューズの総距離から、削除された自分の距離（distance）を引く
+    new_total = shoe.total_distance.to_f - distance
+    
+    # 万が一マイナス値にならないように、[計算結果, 0.0] の大きい方を採用
+    shoe.update!(total_distance: [new_total, 0.0].max)
   end
 end

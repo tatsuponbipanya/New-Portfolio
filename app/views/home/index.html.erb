@@ -29,7 +29,7 @@
       </div>
       
       <%# メインアクションボタン %>
-      <%= link_to "筋トレ記録の一覧・分析へ", user_workout_logs_page_path(current_user), class: "block w-full bg-slate-800 hover:bg-slate-900 text-white py-3 px-4 rounded-xl shadow transition text-center text-sm" %>
+      <%= link_to "筋トレ記録の一覧へ", user_workout_logs_page_path(current_user), class: "block w-full bg-slate-800 hover:bg-slate-900 text-white py-3 px-4 rounded-xl shadow transition text-center text-sm" %>
     </div>
 
     <%# === 2. ランニング管理カード === %>
@@ -50,30 +50,34 @@
       </div>
       
       <%# メインボタン %>
-      <%= link_to "🏃 ジョグ履歴の一覧へ", user_jogs_path(current_user), class: "block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-4 rounded-xl shadow transition text-center text-sm" %>
+      <%= link_to "ジョグ履歴の一覧へ", user_jogs_path(current_user), class: "block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-4 rounded-xl shadow transition text-center text-sm" %>
     </div>
 
     <%# === 3. アカウント管理カード === %>
-    <div class="bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-purple-500 transition duration-200 flex flex-col justify-between font-bold">
-      <div>
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-2xl">👤</span>
-          <h2 class="text-lg font-black text-slate-800">Account</h2>
+    <div class="flex flex-col gap-3 font-bold items-center">
+      <%# 白いカード本体 %>
+      <div class="bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-purple-500 transition duration-200 flex flex-col justify-between h-full">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-2xl">👤</span>
+            <h2 class="text-lg font-black text-slate-800">Account</h2>
+          </div>
+          <p class="text-xs text-slate-400 font-medium mb-4">ご自身のプロフィール確認や、筋トレ仲間の進捗チェックはこちら！</p>
+          
+          <%# サブメニューリンク集 %>
+          <div class="space-y-2 mb-6 text-sm">
+            <%= link_to "👀 友達の記録を見る！", users_path, class: "block p-2.5 bg-slate-50 hover:bg-purple-50 text-slate-700 rounded-xl transition border border-slate-100" %>
+          </div>
         </div>
-        <p class="text-xs text-slate-400 font-medium mb-4">ご自身のプロフィール確認や、筋トレ仲間の進捗チェックはこちら！</p>
         
-        <%# サブメニューリンク集 %>
-        <div class="space-y-2 mb-6 text-sm">
-          <%= link_to "👀 友達の記録を見る！", users_path, class: "block p-2.5 bg-slate-50 hover:bg-purple-50 text-slate-700 rounded-xl transition border border-slate-100" %>
+        <div>
+          <%= link_to "マイページ（プロフィール）", user_path(current_user), class: "block w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-xl shadow transition text-center text-sm" %>
         </div>
       </div>
-      
-      <%# メインアクションとログアウト %>
-      <div class="space-y-2">
-        <%= link_to "マイページ（プロフィール）", user_path(current_user), class: "block w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 px-4 rounded-xl shadow transition text-center text-sm" %>
-        <%= button_to "ログアウト", logout_path, method: :delete, 
-                      onclick: "return confirm('ログアウトして良いですか？');",
-                      class: "block w-full bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 py-2 px-4 rounded-xl text-xs text-center cursor-pointer transition font-bold" %>
+
+      <%= button_to "ログアウト", logout_path, method: :delete, 
+                    form_class: "flex justify-center w-full",
+                    class: "w-40 bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 py-3 rounded-xl text-xs text-center cursor-pointer transition font-bold" %>
       </div>
     </div>
 

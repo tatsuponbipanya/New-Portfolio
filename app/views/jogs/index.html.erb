@@ -28,7 +28,7 @@
             <div>
               <% if @user == current_user %>
                 <%= button_to "削除", user_jog_path(@user, jog), method: :delete, 
-                              onclick: "return confirm('このランニング記録を削除して良いですか？');", 
+                              onclick: "return confirm('このランニング記録を削除して良いですか？　※シューズの累計走行距離も自動で減算されます。');", 
                               class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-2.5 rounded text-[11px] cursor-pointer transition shadow-sm" %>
               <% else %>
                 <span class="text-slate-400 text-[11px]">閲覧のみ</span>

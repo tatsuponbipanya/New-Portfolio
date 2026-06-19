@@ -18,16 +18,19 @@
   </div>
 <% end %>
 
-  <%# 左側：筋トレグループ %>
-  <div class="flex-1 flex flex-col gap-2 p-2 bg-blue-50/50 border border-blue-100 rounded-xl">
-    <span class="text-[10px] text-blue-500 uppercase tracking-widest pl-1">Muscle Training</span>
-    <%= link_to "筋トレ記録を見る", user_workout_logs_page_path(@user), class: "w-full text-center bg-blue-600 text-white p-2.5 rounded-lg hover:bg-blue-700 shadow transition text-xs whitespace-nowrap" %>
-    <%= link_to "推定MAX（1RM）の遷移", analytics_path(@user), class: "w-full text-center bg-blue-500 text-white p-2.5 rounded-lg hover:bg-blue-600 shadow transition text-xs whitespace-nowrap" %>
-  </div>
-  
-  <%# 右側：ランニンググループ %>
-  <div class="flex-1 flex flex-col gap-2 p-2 bg-orange-50/50 border border-orange-100 rounded-xl">
-    <span class="text-[10px] text-orange-500 uppercase tracking-widest pl-1">Running</span>
-    <div class="text-[10px] h-3"></div> 
-    <%= link_to "ランニング記録を見る", user_jogs_path(@user), class: "w-full text-center bg-orange-500 text-white p-2.5 rounded-lg hover:bg-orange-600 shadow transition text-xs whitespace-nowrap mt-auto" %>
-  </div>
+<% # 左側：筋トレグループ %>
+<div class="flex-1 flex flex-col gap-2 p-2 bg-blue-50/50 border border-blue-100 rounded-xl">
+  <span class="text-[10px] text-blue-500 uppercase tracking-widest pl-1">Muscle Training</span>
+  <%= link_to "筋トレ記録を見る", user_workout_logs_page_path(@user), class: "w-full text-center bg-blue-600 text-white p-2.5 rounded-lg hover:bg-blue-700 shadow transition text-xs whitespace-nowrap" %>
+  <%= link_to "推定MAX（1RM）の遷移", analytics_path(@user), class: "w-full text-center bg-blue-500 text-white p-2.5 rounded-lg hover:bg-blue-600 shadow transition text-xs whitespace-nowrap" %>
+</div>
+
+<% # 右側：ランニンググループ %>
+<div class="flex-1 flex flex-col gap-2 p-2 bg-orange-50/50 border border-orange-100 rounded-xl">
+  <span class="text-[10px] text-orange-500 uppercase tracking-widest pl-1">Running</span>
+  <%= link_to "ランニング記録を見る", user_jogs_path(@user), class: "w-full text-center bg-orange-500 text-white p-2.5 rounded-lg hover:bg-orange-600 shadow transition text-xs whitespace-nowrap" %>
+  <%= link_to "マイシューズを見る", user_shoes_path(@user), class: "w-full text-center bg-orange-500 text-white p-2.5 rounded-lg hover:bg-orange-600 shadow transition text-xs whitespace-nowrap" %>
+</div>
+
+<% # 余白追加 %>
+<div class="h-16"></div>
