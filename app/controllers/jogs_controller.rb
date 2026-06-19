@@ -26,6 +26,37 @@ class JogsController < ApplicationController
     end
   end
 
+  def edit
+    @user = User.find(params[:user_id])
+    @jog = Jog.find(params[:id])
+  end
+
+  def update
+    @user = User.find(params[:user_id])
+    @jog = Jog.find(params[:id])
+    
+    # 変更前の「古い距離」と「古いシューズ」をキープしておく
+    old_distance = @jog.distance.to_f
+    old_shoe = @jog.shoe
+    
+    if @jog.update(jog_params)
+      # ① まず、編集前の古いシューズの累計距離から、古いジョグの距離を引く
+      if old_shoe
+        old_shoe.update(total_distance: old_shoe.total_distance.to_f - old_distance)
+      end
+      
+      # ② 次に、編集後の新しいシューズ（同じ靴でもOK）に、新しいジョグの距離を足す
+      new_shoe = @jog.shoe
+      if new_shoe
+        new_shoe.update(total_distance: new_shoe.total_distance.to_f + @jog.distance.to_f)
+      end
+
+      redirect_to user_jogs_path(@user), notice: "走行記録を更新しました！"
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   def destroy
   @jog = Jog.find(params[:id])
   

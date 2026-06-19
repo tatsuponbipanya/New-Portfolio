@@ -39,9 +39,9 @@ Rails.application.routes.draw do
   resources :users, only: [:index, :show, :edit, :update] do
     # shoesは index だけをユーザーに紐づける（これがマイシューズページ）
     resources :shoes, only: [:index]
-    resources :jogs, only: [:index, :new, :create, :destroy]
+    resources :jogs, only: [:index, :new, :create, :edit, :update, :destroy]
   end
 
   # newやcreate、destroyは外側で管理
-  resources :shoes, only: [:new, :create, :destroy]
+  resources :shoes, only: [:new, :create, :edit, :update, :destroy]
   end

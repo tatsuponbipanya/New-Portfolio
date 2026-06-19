@@ -1,0 +1,66 @@
+<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow font-bold text-slate-700">
+  <h2 class="text-xl font-black text-slate-800 mb-6 text-center">走行記録の編集</h2>
+
+  <%= form_with(model: [@user, @jog], local: true, class: "space-y-4") do |f| %>
+    <% if @jog.errors.any? %>
+      <div class="bg-red-50 border border-red-200 text-red-600 rounded p-3 text-sm">
+        <ul class="list-disc pl-5">
+          <% @jog.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :date, "日付", class: "block text-sm mb-1" %>
+      <%= f.date_field :date, class: "w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= f.label :shoe_id, "使用したシューズ", class: "block text-sm mb-1" %>
+      <%= f.collection_select :shoe_id, @user.shoes, :id, :name, { prompt: "シューズを選択してください" }, { class: "w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" } %>
+    </div>
+
+    <div>
+      <%= f.label :distance, "走行距離 (km)", class: "block text-sm mb-1" %>
+      <div class="relative">
+        <%= f.text_field :distance, inputmode: "decimal", class: "w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pr-12" %>
+        <span class="absolute right-3 top-2 text-sm text-slate-400">km</span>
+      </div>
+    </div>
+
+    <div>
+      <label class="block text-sm mb-1">タイム</label>
+      <div class="grid grid-cols-3 gap-2 items-center">
+        <div class="flex items-center gap-1">
+          <%= f.number_field :time_hour, min: 0, class: "w-full px-2 py-2 border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-center" %>
+          <span class="text-xs text-slate-500">時間</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <%= f.number_field :time_minute, min: 0, max: 59, class: "w-full px-2 py-2 border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-center" %>
+          <span class="text-xs text-slate-500">分</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <%= f.number_field :time_second, min: 0, max: 59, class: "w-full px-2 py-2 border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-center" %>
+          <span class="text-xs text-slate-500">秒</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :heart_rate, "平均心拍数 (bpm)", class: "block text-sm mb-1" %>
+      <%= f.number_field :heart_rate, min: 0, placeholder: "任意", class: "w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= f.label :memo, "メモ", class: "block text-sm mb-1" %>
+      <%= f.text_area :memo, rows: 3, placeholder: "任意", class: "w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    </div>
+
+    <div class="pt-2 space-y-2">
+      <%= f.submit "変更を保存する", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded shadow transition cursor-pointer" %>
+      <%= link_to "キャンセル", user_jogs_path(@user), class: "block w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-2 rounded text-center transition border border-slate-300" %>
+    </div>
+  <% end %>
+</div>

@@ -52,6 +52,11 @@ class WorkoutLogsController < ApplicationController
         daily_logs.map(&:estimated_1rm).max
       end
     end
+
+    # 種目ごとの「過去最高1RM」を取得してハッシュに入れる
+    @max_1rm_by_menu = @chart_data_by_menu.transform_values do |daily_max_hash|
+      daily_max_hash.values.max || 0.0 # 日付ごとのMAXの中から、最大値をゲット
+    end
   end
 
   # 筋トレ記録＋円グラフ

@@ -40,43 +40,78 @@
 
               <div class="text-xs text-slate-500 space-y-1 mb-6">
                 <p>サイズ：<span class="font-bold text-slate-700"><%= shoe.size %> cm</span></p>
-                <p>耐用基準：<span class="font-bold text-slate-700">500.0 km</span></p>
+                <% if shoe.bought_on.present? %>
+                  <p>購入日：<span class="font-bold text-slate-700"><%= shoe.bought_on.strftime('%Y/%m/%d') %></span></p>
+                <% else %>
+                  <p>購入日：<span class="font-bold text-slate-400 italic">未登録</span></p>
+                <% end %>
+                <p>耐用基準：<span class="font-bold text-slate-700">500.0 km / 3年 (経年劣化)</span></p>
               </div>
 
-              <div class="mb-6">
-                <div class="flex justify-between items-end text-sm mb-2">
-                  <span class="text-slate-500 font-medium">走行距離</span>
-                  <span class="font-black text-slate-800">
-                    <%= shoe.total_distance %> <span class="text-xs text-slate-500 font-normal">/ 500.0 km</span>
-                  </span>
+              <%# === 📊 各種メーターの計算エリア === %>
+              <% 
+                # ① 走行距離の計算
+                current_dist = shoe.total_distance.to_f
+                dist_percentage = [((current_dist / 500.0) * 100).round, 100].min
+                
+                # ② 経過年数の計算（3年＝1095日として計算）
+                if shoe.bought_on.present?
+                  passed_days = (Date.today - shoe.bought_on.to_date).to_i
+                  time_percentage = [((passed_days / 1095.0) * 100).round, 100].min
+                  # 経過年数を少数第1位まで計算（例: 1.5年）
+                  passed_years = (passed_days / 365.0).round(1)
+                else
+                  time_percentage = 0
+                  passed_years = 0.0
+                end
+
+                # ③ 総合的な警告判定（距離が700km以上、または3年以上経過）
+                is_expired = current_dist >= 700.0 || (shoe.bought_on.present? && shoe.bought_on < Date.today - 3.years)
+                # 警告間近（距離が500km以上、または30ヶ月以上経過）
+                is_warning = current_dist >= 500.0 || (shoe.bought_on.present? && shoe.bought_on < Date.today - 30.months)
+
+                if is_expired
+                  status_text = "もう替えた方がいいよ！"
+                  text_color = "text-red-600"
+                elsif is_warning
+                  status_text = "そろそろ替え時です！"
+                  text_color = "text-amber-600"
+                else
+                  status_text = "シューズの状態：良好！"
+                  text_color = "text-green-600"
+                end
+              %>
+              
+              <div class="space-y-4 mb-6">
+                <%# 🏃‍♂️ メーター1：走行距離 %>
+                <div>
+                  <div class="flex justify-between items-end text-xs mb-1">
+                    <span class="text-slate-500 font-medium">🏃‍♂️ 走行距離</span>
+                    <span class="font-black text-slate-800">
+                      <%= shoe.total_distance %> <span class="text-slate-400 font-normal">/ 500.0 km</span>
+                    </span>
+                  </div>
+                  <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                    <div class="<%= current_dist >= 500.0 ? 'bg-amber-500' : 'bg-blue-500' %> h-2.5 rounded-full transition-all duration-500" style="width: <%= dist_percentage %>%"></div>
+                  </div>
                 </div>
-                
-                <% 
-                  current_dist = shoe.total_distance.to_f
-                  percentage = [((current_dist / 500.0) * 100).round, 100].min
-                  remaining_percentage = 100 - percentage
-                  
-                  if current_dist >= 700.0
-                    bar_color = "bg-red-600"
-                    status_text = "もう替えた方がいいよ！"
-                    text_color = "text-red-600"
-                  elsif current_dist >= 500.0
-                    bar_color = "bg-amber-500"
-                    status_text = "そろそろ替え時です！"
-                    text_color = "text-amber-600"
-                  else
-                    bar_color = "bg-green-500"
-                    status_text = "買い替え時まで あと #{remaining_percentage}%"
-                    text_color = "text-slate-400"
-                  end
-                %>
-                
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-                  <div class="<%= bar_color %> h-3 rounded-full transition-all duration-500" style="width: <%= percentage %>%"></div>
+
+                <%# 📅 メーター2：経過年数（3年でMAX） %>
+                <div>
+                  <div class="flex justify-between items-end text-xs mb-1">
+                    <span class="text-slate-500 font-medium">📅 経過年数</span>
+                    <span class="font-black text-slate-800">
+                      <%= passed_years %> <span class="text-slate-400 font-normal">/ 3.0 年</span>
+                    </span>
+                  </div>
+                  <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                    <div class="<%= passed_years >= 3.0 ? 'bg-red-500' : (passed_years >= 2.5 ? 'bg-amber-500' : 'bg-emerald-500') %> h-2.5 rounded-full transition-all duration-500" style="width: <%= time_percentage %>%"></div>
+                  </div>
                 </div>
-                
-                <div class="text-right mt-2">
-                  <span class="text-xs font-black tracking-tight <%= text_color %>">
+
+                <%# 📢 総合ステータス表示 %>
+                <div class="text-right pt-1">
+                  <span class="text-xs font-black tracking-tight <%= text_color %> bg-slate-50 border px-2.5 py-1 rounded-md shadow-inner">
                     <%= status_text %>
                   </span>
                 </div>
@@ -84,8 +119,10 @@
             </div>
 
             <% if @user == current_user %>
-              <div class="border-t border-slate-100 pt-4 mt-2 flex justify-end">
-                <%= button_to "この靴を削除する", shoe_path(shoe), method: :delete, form: { onsubmit: "return confirm('このシューズを一覧から削除してもよろしいですか？');" }, class: "text-xs font-bold text-slate-400 hover:text-red-500 transition-all duration-200 bg-transparent border-0 cursor-pointer p-0" %>
+              <div class="border-t border-slate-100 pt-4 mt-2 flex justify-end items-center space-x-3 leading-none">
+                <%= link_to "編集する", edit_shoe_path(shoe), class: "text-xs font-bold text-slate-400 hover:text-blue-500 transition-all duration-200 inline-flex items-center h-4" %>
+                <span class="text-xs text-slate-300 self-center">|</span>
+                <%= button_to "削除する", shoe_path(shoe), method: :delete, form: { class: "inline-flex items-center h-4", onsubmit: "return confirm('このシューズを一覧から削除してもよろしいですか？');" }, class: "text-xs font-bold text-slate-400 hover:text-red-500 transition-all duration-200 bg-transparent border-0 cursor-pointer p-0 m-0 leading-none inline-flex items-center" %>
               </div>
             <% end %>
 

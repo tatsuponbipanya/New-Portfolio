@@ -2,7 +2,7 @@ class ShoesController < ApplicationController
 
   def index
     @user = User.find(params[:user_id])
-    @shoes = @user.shoes
+    @shoes = @user.shoes.order(created_at: :desc)
   end
 
   def new
@@ -30,6 +30,20 @@ class ShoesController < ApplicationController
     end
   end
 
+  def edit
+    @shoe = current_user.shoes.find(params[:id])
+  end
+
+  def update
+    @shoe = current_user.shoes.find(params[:id])
+  # ストロングパラメータ（shoe_params）を使って安全に更新
+    if @shoe.update(shoe_params)
+      redirect_to user_shoes_path(current_user), notice: "シューズの情報を更新しました！"
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   def destroy
     @shoe = current_user.shoes.find(params[:id])
     @shoe.destroy
@@ -45,6 +59,6 @@ class ShoesController < ApplicationController
 
   # 安全にデータを受け取るためのストロングパラメーター
   def shoe_params
-    params.require(:shoe).permit(:name, :total_distance, :target_distance, :size, :width)
+    params.require(:shoe).permit(:name, :total_distance, :target_distance, :size, :width, :bought_on)
   end
 end

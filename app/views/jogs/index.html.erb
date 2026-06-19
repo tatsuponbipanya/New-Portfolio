@@ -1,6 +1,4 @@
-  <%# flex-col（縦並び）を基本にして、スマホのときは gap-y-3 で上下に余白を作る %>
-  <%# sm:flex-row（パソコンでは横並び）にして、左右の端にバランスよく配置する %>
-  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-y-3 mb-6">
+<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-y-3 mb-6">
     <h2 class="text-xl sm:text-2xl font-black text-slate-800 flex items-center gap-2">
       <%= @user.name %>さんの走行記録
     </h2>
@@ -15,28 +13,30 @@
     </p>
   <% else %>
 
-    <%# === 1. スマホ用レイアウト === %>
     <div class="block sm:hidden space-y-4 mb-6">
       <% @jogs.each do |jog| %>
         <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 font-bold relative">
           
-          <%# 日付と削除ボタンの行 %>
           <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
             <span class="text-xs text-slate-500 flex items-center gap-1">
               📅 <%= jog.date.strftime("%Y/%m/%d") if jog.date %>
             </span>
             <div>
               <% if @user == current_user %>
-                <%= button_to "削除", user_jog_path(@user, jog), method: :delete, 
-                              onclick: "return confirm('このランニング記録を削除して良いですか？　※シューズの累計走行距離も自動で減算されます。');", 
-                              class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-2.5 rounded text-[11px] cursor-pointer transition shadow-sm" %>
+                <%# 💡 スマホ用のここも inline-flex と h-6 で高さをガチッと一本化！ %>
+                <div class="flex items-center gap-2 leading-none">
+                  <%= link_to "編集", edit_user_jog_path(@user, jog), class: "bg-slate-100 text-slate-600 border border-slate-300 hover:bg-slate-200 font-bold py-1 px-2.5 rounded text-[11px] transition inline-flex items-center h-6 text-center shadow-sm" %>
+                  <%= button_to "削除", user_jog_path(@user, jog), method: :delete, 
+                                onclick: "return confirm('このランニング記録を削除して良いですか？ ※シューズの累計走行距離も自動で減算されます。');", 
+                                form: { class: "inline-flex items-center h-6" },
+                                class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-2.5 rounded text-[11px] cursor-pointer transition m-0 inline-flex items-center h-6 shadow-sm" %>
+                </div>
               <% else %>
                 <span class="text-slate-400 text-[11px]">閲覧のみ</span>
               <% end %>
             </div>
           </div>
 
-          <%# メイン情報（ラベルを付けてパッと見でわかるように） %>
           <div class="grid grid-cols-2 gap-2 mb-3 bg-white p-2.5 rounded-lg border border-slate-100 shadow-sm">
             <div class="text-center border-r border-slate-100">
               <span class="block text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">距離</span>
@@ -51,7 +51,6 @@
             </div>
           </div>
 
-          <%# 詳細情報（シューズ・ペース・心拍数） %>
           <div class="bg-white border border-slate-100 rounded-lg p-3 space-y-2 text-xs text-slate-600 shadow-sm">
             <div class="flex justify-between items-center">
               <span class="text-slate-400 font-medium">👟 シューズ:</span>
@@ -79,7 +78,6 @@
             </div>
           </div>
 
-          <%# メモがある場合だけ表示 %>
           <% if jog.memo.present? %>
             <div class="mt-2.5 text-xs text-slate-500 bg-slate-100 rounded-lg p-2.5 font-medium border border-slate-200">
               <span class="block text-[10px] text-slate-400 font-bold mb-1">📝 メモ</span>
@@ -91,7 +89,6 @@
       <% end %>
     </div>
 
-    <%# === 2. PC・タブレット用レイアウト（スマホでは非表示、画面が広いときだけテーブル表示） === %>
     <div class="hidden sm:block overflow-x-auto">
       <table class="w-full text-left border-collapse font-bold">
         <thead>
@@ -111,15 +108,12 @@
             <tr class="hover:bg-slate-50 transition duration-150">
               <td class="p-3 whitespace-nowrap text-slate-600"><%= jog.date.strftime("%Y/%m/%d") if jog.date %></td>
 
-              <%# シューズ %>
               <td class="p-3">
                 <%= link_to jog.shoe.name, user_shoes_path(@user), class: "text-blue-600 hover:text-blue-800 hover:underline font-bold" %>
               </td>
 
-              <%# 距離 %>
               <td class="p-3 text-slate-900 font-black"><%= jog.distance %> km</td>
 
-              <%# タイム %>
               <td class="p-3 whitespace-nowrap">
                 <%= "#{jog.time_hour}時間 " if jog.time_hour.to_i > 0 %>
                 <%= "#{jog.time_minute}分" %><%= "#{jog.time_second}秒" %>
@@ -132,7 +126,6 @@
                 <% end %>
               </td>
 
-              <%# 心拍数 %>
               <td class="p-3 whitespace-nowrap">
                 <% if jog.heart_rate.present? %>
                   <span class="text-red-500">❤️</span> <%= jog.heart_rate %> bpm
@@ -141,17 +134,19 @@
                 <% end %>
               </td>
 
-              <%# メモ %>
               <td class="p-3 text-xs text-slate-500 max-w-xs truncate" title="<%= jog.memo %>">
                 <%= jog.memo.presence || "-" %>
               </td>
 
               <td class="p-3 whitespace-nowrap">
                 <% if @user == current_user %>
-                  <%= button_to "削除", user_jog_path(@user, jog), method: :delete, 
-                                onclick: "return confirm('このランニング記録を削除して良いですか？');", 
-                                form: { class: "inline-block" },
-                                class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-3 rounded text-xs cursor-pointer transition" %>
+                  <div class="flex items-center gap-2 h-full leading-none">
+                    <%= link_to "編集", edit_user_jog_path(@user, jog), class: "bg-slate-100 text-slate-600 border border-slate-300 hover:bg-slate-200 font-bold py-1 px-3 rounded text-xs transition inline-flex items-center h-6 text-center shadow-sm" %>
+                    <%= button_to "削除", user_jog_path(@user, jog), method: :delete, 
+                                  onclick: "return confirm('このランニング記録を削除して良いですか？');", 
+                                  form: { class: "inline-flex items-center h-6" },
+                                  class: "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-1 px-3 rounded text-xs cursor-pointer transition m-0 inline-flex items-center h-6 shadow-sm" %>
+                  </div>
                 <% else %>
                   <span class="text-slate-400 text-xs">閲覧のみ</span>
                 <% end %>
@@ -166,4 +161,3 @@
   <div class="mt-6 text-center border-t pt-4">
     <%= link_to "プロフィールへ戻る", user_path(@user), class: "text-sm text-slate-500 hover:text-slate-700 font-bold" %>
   </div>
-</div>

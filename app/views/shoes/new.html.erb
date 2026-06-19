@@ -49,10 +49,18 @@
 
       <div>
         <%= f.label :total_distance, "累計走行距離（km）", class: "block text-sm font-bold text-slate-700 mb-2" %>
-        <%= f.number_field :total_distance, value: 0.0, step: "0.1", class: "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200" %>
+        <div class="relative">
+          <%= f.text_field :total_distance, value: 0.0, inputmode: "decimal", class: "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 pr-12" %>
+          <span class="absolute right-4 top-3.5 text-sm font-bold text-slate-400">km</span>
+        </div>
         <p class="text-xs text-slate-500 mt-2">
           ※すでに履いている靴の場合は、これまでの走行距離を入力してください。
         </p>
+      </div>
+
+      <div>
+        <%= f.label :bought_on, "購入日", class: "block text-sm font-bold text-slate-700 mb-2" %>
+        <%= f.date_field :bought_on, value: Date.today, class: "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 cursor-pointer" %>
       </div>
 
       <div class="pt-4 space-y-3">
