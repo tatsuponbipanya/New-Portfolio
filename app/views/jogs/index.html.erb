@@ -23,7 +23,6 @@
             </span>
             <div>
               <% if @user == current_user %>
-                <%# 💡 スマホ用のここも inline-flex と h-6 で高さをガチッと一本化！ %>
                 <div class="flex items-center gap-2 leading-none">
                   <%= link_to "編集", edit_user_jog_path(@user, jog), class: "bg-slate-100 text-slate-600 border border-slate-300 hover:bg-slate-200 font-bold py-1 px-2.5 rounded text-[11px] transition inline-flex items-center h-6 text-center shadow-sm" %>
                   <%= button_to "削除", user_jog_path(@user, jog), method: :delete, 
