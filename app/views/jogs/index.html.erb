@@ -2,7 +2,7 @@
   <%# sm:flex-row（パソコンでは横並び）にして、左右の端にバランスよく配置する %>
   <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-y-3 mb-6">
     <h2 class="text-xl sm:text-2xl font-black text-slate-800 flex items-center gap-2">
-      ランニングの記録履歴
+      <%= @user.name %>さんの走行記録
     </h2>
     <div class="flex-shrink-0">
       <%= link_to "新しく記録する", new_user_jog_path(@user), class: "inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow transition text-sm text-center" %>

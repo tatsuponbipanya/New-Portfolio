@@ -6,6 +6,7 @@
 <div class="relative min-h-screen px-4 py-12 sm:px-6 lg:px-8">
   <div class="max-w-5xl mx-auto">
     
+    <%# ヘッダーエリア %>
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-8 border-b border-white/20 mb-12">
       <div>
         <h1 class="text-4xl font-black tracking-tight text-white mb-2 drop-shadow-md">
@@ -21,6 +22,7 @@
       </div>
     </div>
 
+    <%# シューズ一覧のグリッド %>
     <% if @shoes.any? %>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <% @shoes.each do |shoe| %>
@@ -81,14 +83,20 @@
               </div>
             </div>
 
-            <div class="border-t border-slate-100 pt-4 mt-2 flex justify-end">
-              <%= button_to "この靴を削除する", shoe_path(shoe), method: :delete, form: { onsubmit: "return confirm('このシューズを一覧から削除してもよろしいですか？');" }, class: "text-xs font-bold text-slate-400 hover:text-red-500 transition-all duration-200 bg-transparent border-0 cursor-pointer p-0" %>
-            </div>
+            <% if @user == current_user %>
+              <div class="border-t border-slate-100 pt-4 mt-2 flex justify-end">
+                <%= button_to "この靴を削除する", shoe_path(shoe), method: :delete, form: { onsubmit: "return confirm('このシューズを一覧から削除してもよろしいですか？');" }, class: "text-xs font-bold text-slate-400 hover:text-red-500 transition-all duration-200 bg-transparent border-0 cursor-pointer p-0" %>
+              </div>
+            <% end %>
 
           </div>
         <% end %>
       </div>
     <% end %>
+
+    <div class="mt-12 flex justify-center w-full">
+      <%= link_to "走行記録一覧に戻る", user_jogs_path(@user), class: "w-full sm:w-52 bg-white/90 backdrop-blur-md hover:bg-white text-emerald-600 border border-emerald-200 font-black py-4 rounded-xl shadow-md active:translate-y-0.5 transition-all duration-200 text-center text-sm" %>
+    </div>
 
   </div>
 </div>

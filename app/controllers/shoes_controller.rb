@@ -31,10 +31,14 @@ class ShoesController < ApplicationController
   end
 
   def destroy
-    @shoe = Shoe.find(params[:id])
+    @shoe = current_user.shoes.find(params[:id])
     @shoe.destroy
     flash[:success] = "シューズを削除しました。"
     redirect_to user_shoes_path(current_user), status: :see_other
+
+  # 他ユーザーの靴IDを直接指定し、削除しようとした場合のガード
+  rescue ActiveRecord::RecordNotFound
+    redirect_to root_path, alert: "指定されたシューズが見つからないか、削除する権限がありません。", status: :see_other
   end
 
   private

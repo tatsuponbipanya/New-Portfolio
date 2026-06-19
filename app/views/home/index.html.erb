@@ -1,7 +1,7 @@
 <div class="max-w-4xl mx-auto px-4 mt-8 sm:mt-12 mb-12">
   <%# ヘッダー挨拶 %>
   <div class="text-center mb-8 sm:mb-12 font-bold">
-    <h1 class="text-2xl sm:text-3xl font-black text-slate-800 mb-2"><%= current_user.name %> Diner ダッシュボード</h1>
+    <h1 class="text-2xl sm:text-3xl font-black text-slate-800 mb-2"><%= current_user.name %>さんのダッシュボード</h1>
     <p class="text-slate-500 text-sm sm:text-base"><%= current_user.name %>、今日は何する？</p>
   </div>
 
@@ -25,6 +25,7 @@
           <%= link_to "＋ テンプレート作成", new_workout_template_path, class: "block p-2.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 rounded-xl transition border border-slate-100" %>
           <%= link_to "⚙️ テンプレート管理", manage_workout_templates_path, class: "block p-2.5 bg-slate-50 hover:bg-blue-50 text-slate-700 rounded-xl transition border border-slate-100" %>
           <%= link_to "📊 1RM（MAX重量）分析", analytics_path(current_user), class: "block p-2.5 bg-slate-50 hover:bg-purple-50 text-slate-700 rounded-xl transition border border-slate-100" %>
+          <%= link_to "📋 筋トレ記録一覧", user_workout_logs_page_path(current_user), class: "block p-2.5 bg-slate-50 hover:bg-blue-50 text-slate-700 rounded-xl transition border border-slate-100" %>
         </div>
       </div>
       
@@ -44,6 +45,7 @@
         <%# サブメニューリンク集 %>
         <div class="space-y-2 mb-6 text-sm">
           <%= link_to "＋ ランニングを記録する", new_user_jog_path(current_user), class: "block p-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl transition border border-emerald-100 text-center" %>
+          <%= link_to "📋 走行記録一覧", user_jogs_path(current_user), class: "block p-2.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 rounded-xl transition border border-slate-100" %>
           <%= link_to "👟 マイシューズを登録", new_shoe_path, class: "block p-2.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 rounded-xl transition border border-slate-100" %>
           <%= link_to "👟 マイシューズ一覧", user_shoes_path(current_user), class: "block p-2.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 rounded-xl transition border border-slate-100" %>
         </div>
