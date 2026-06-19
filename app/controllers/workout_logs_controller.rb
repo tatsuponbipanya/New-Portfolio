@@ -22,7 +22,7 @@ class WorkoutLogsController < ApplicationController
     @workout_form.user_id = current_user.id
 
     if @workout_form.save
-      redirect_to user_path(current_user), notice: "筋トレが記録されました！"
+      redirect_to user_workout_logs_page_path(current_user), notice: "筋トレが記録されました！"
     else
       @workout_logs = current_user.workout_logs.order(workout_date: :desc)
       @templates = current_user.workout_templates
