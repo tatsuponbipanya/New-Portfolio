@@ -1,26 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe WorkoutForm, type: :model do
-
   let(:user) do
     User.create!(
       name: 'たつマジロ',
       email: 'test@example.com',
-      password: 'password123',
+      password: 'password123'
     )
   end
 
-  # RSpecのルールで、valid_attributes という名前の中に、このデータの塊（ハッシュ）を覚えさせておくという命令
-  # valid（有効な、正しい、バリデーションを通る）
-  # attributes（属性、入力項目のデータ）
+  # バリデーションの「.values」や「set[:weight]」が100%正常に動くハッシュの形にする
   let(:valid_attributes) do
     {
       user_id: user.id,
       workout_date: Time.current,
       menu_type: 'ベンチプレス',
       sets_attributes: {
-        '0' => { weight: '60', reps: '5' },
-        '1' => { weight: '83', reps: '1' }
+        0 => { weight: '83.0', reps: '5' },
+        1 => { weight: '83.0', reps: '5' },
+        2 => { weight: '83.0', reps: '4' }
       }
     }
   end
@@ -31,17 +29,37 @@ RSpec.describe WorkoutForm, type: :model do
         form = WorkoutForm.new(valid_attributes)
         result = form.save
         
-        # もしこれでもWorkoutLog側でエラーが出る場合は、生のメッセージを出す
         unless result
-          puts "WorkoutLogの生エラーメッセージ内容：#{form.errors.instance_variable_get(:@errors)&.map(&:message)}"
+          puts "\n=================================================="
+          puts "【まだエラーが出る場合の生内容】"
+          puts form.errors.full_messages
+          puts "==================================================\n"
         end
 
         expect(result).to be true
       end
 
-      it '実際にWorkoutLogのデータが2個増えること' do
+      it '実際にWorkoutLogのデータが3個増えること' do
         form = WorkoutForm.new(valid_attributes)
-        expect { form.save }.to change(WorkoutLog, :count).by(2)
+        expect { form.save }.to change(WorkoutLog, :count).by(3)
+      end
+    end
+
+    context '不正なデータ（日付やメニューが空など）のとき' do
+      let(:invalid_attributes) do
+        {
+          user_id: user.id,
+          workout_date: '',
+          menu_type: '',
+          sets_attributes: {
+            0 => { weight: '', reps: '' }
+          }
+        }
+      end
+
+      it '保存に失敗すること' do
+        form = WorkoutForm.new(invalid_attributes)
+        expect(form.save).to be false
       end
     end
   end

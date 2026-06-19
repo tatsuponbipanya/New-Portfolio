@@ -70,4 +70,14 @@ class WorkoutLogsController < ApplicationController
       [part, logs.sum { |log| log.weight * log.reps }]
     end.to_h
   end
+
+  private
+
+  # セキュリティ。ちゃんとworkout_formのデータがあるかのチェックと、日付、メニュー名、重量、回数の4つのデータだけを通過許可。
+  def workout_form_params
+    params.require(:workout_form).permit(
+      :workout_date,
+      workout_logs_attributes: [:id, :workout_type_id, :weight, :reps, :set_number, :menu_type, :body_part]
+    )
+  end
 end
