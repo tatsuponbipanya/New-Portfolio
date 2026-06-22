@@ -45,7 +45,8 @@
         <%# サブメニューリンク集 %>
         <div class="space-y-2 mb-6 text-sm">
           <%= link_to "＋ ランニングを記録する", new_user_jog_path(current_user), class: "block p-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl transition border border-emerald-100 text-center" %>
-          <%= link_to "📋 走行記録一覧", user_jogs_path(current_user), class: "block p-2.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 rounded-xl transition border border-slate-100" %>
+          <%= link_to "📋 月間走行記録", user_jogs_path(current_user), class: "block p-2.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 rounded-xl transition border border-slate-100" %>
+          <%= link_to "📋 年間走行記録", annual_user_jogs_path(current_user), class: "block p-2.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 rounded-xl transition border border-slate-100" %>
           <%= link_to "👟 マイシューズを登録＋", new_shoe_path, class: "block p-2.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 rounded-xl transition border border-slate-100" %>
           <%= link_to "👟 マイシューズ一覧", user_shoes_path(current_user), class: "block p-2.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 rounded-xl transition border border-slate-100" %>
         </div>

@@ -71,7 +71,8 @@
           
           <p class="px-4 py-1 text-[10px] text-slate-400 uppercase tracking-widest">Running</p>
           <%= link_to "ランニングを記録！", new_user_jog_path(current_user), class: "block px-4 py-2 text-emerald-700 hover:bg-emerald-50" %>
-          <%= link_to "走行記録一覧", user_jogs_path(current_user), class: "block px-4 py-2 text-emerald-700 hover:bg-emerald-50" %>
+          <%= link_to "月間走行記録", user_jogs_path(current_user), class: "block px-4 py-2 text-emerald-700 hover:bg-emerald-50" %>
+          <%= link_to "年間走行記録", annual_user_jogs_path(current_user), class: "block px-4 py-2 text-emerald-700 hover:bg-emerald-50" %>
           <%= link_to "マイシューズを登録＋", new_shoe_path , class: "block px-4 py-2 text-emerald-700 hover:bg-emerald-50" %>
           <%= link_to "マイシューズ一覧", user_shoes_path(current_user), class: "block px-4 py-2 text-emerald-700 hover:bg-emerald-50" %>
           
