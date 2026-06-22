@@ -41,18 +41,27 @@ class Jog < ApplicationRecord
     self.pace_second = (pace_per_km % 60).to_i
   end
 
-  # 紐付いているシューズを引っ張ってきて、累計距離を加算して保存
+# 紐付いているシューズを引っ張ってきて、累計距離を加算して保存
   def add_distance_to_shoe
     new_total = shoe.total_distance.to_f + distance
-    shoe.update!(total_distance: new_total)
+    
+    # update! ではなく update を使い、失敗したときの処理を自分で書く
+    unless shoe.update(total_distance: new_total)
+      # 1. シューズ側のエラーメッセージを、Jog（画面）側にコピーする
+      errors.add(:base, "シューズの更新に失敗しました: #{shoe.errors.full_messages.join(', ')}")
+      # 2. 強制的にエラーを発生させて、Jogの保存自体も確実にロールバックさせる
+      raise ActiveRecord::RecordInvalid.new(self)
+    end
   end
 
   # 紐付いているシューズを引っ張ってきて、削除されたジョグの距離を減算して保存
   def subtract_distance_from_shoe
-    # 今のシューズの総距離から、削除された自分の距離（distance）を引く
     new_total = shoe.total_distance.to_f - distance
     
     # 万が一マイナス値にならないように、[計算結果, 0.0] の大きい方を採用
-    shoe.update!(total_distance: [new_total, 0.0].max)
+    unless shoe.update(total_distance: [new_total, 0.0].max)
+      errors.add(:base, "シューズの更新に失敗しました: #{shoe.errors.full_messages.join(', ')}")
+      raise ActiveRecord::RecordInvalid.new(self)
+    end
   end
 end

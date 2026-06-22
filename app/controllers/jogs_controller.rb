@@ -1,10 +1,23 @@
 class JogsController < ApplicationController
   before_action :require_login # ログイン必須にする
 
-  # その人のジョグ記録を新しい順に表示
+  # その人のジョグ記録を表示（月ごとの絞り込み機能つき）
   def index
     @user = User.find(params[:user_id])
-    @jogs = Jog.where(shoe_id: @user.shoes.pluck(:id)).order(date: :desc, id: :desc)
+    base_jogs = Jog.where(shoe_id: @user.shoes.pluck(:id)).order(date: :desc, id: :desc)
+
+    # 1. タブに表示するための「記録が存在する月」のリストを作成（重複排除して新しい順）
+    @available_months = base_jogs.pluck(:date).compact.map(&:beginning_of_month).uniq.sort.reverse
+
+    # 2. URLのパラメータ（?month=2026-06など）があればその月を、なければ「今月」を選択状態にする
+    if params[:month].present?
+      @selected_month = Date.parse(params[:month] + "-01")
+    else
+      @selected_month = Date.current.beginning_of_month
+    end
+
+    # 3. 選択された月（1日〜月末）のデータだけに絞り込んでビューに渡す
+    @jogs = base_jogs.where(date: @selected_month.all_month)
   end
 
   def new

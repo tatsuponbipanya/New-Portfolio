@@ -31,9 +31,16 @@ class WorkoutLogsController < ApplicationController
   end
 
   def destroy
-    @workout_log = current_user.workout_logs.find(params[:id])
-    @workout_log.destroy
-    redirect_to user_path(current_user), notice: "筋トレ記録を削除しました。"
+    # 1. まず、クリックされた特定の1セットの記録を取得する
+    target_log = current_user.workout_logs.find(params[:id])  
+    # 2. その記録と同じ「日付（秒まで一致）」かつ「種目名」のデータをすべて集める
+    @workout_logs = current_user.workout_logs.where(
+    workout_date: target_log.workout_date,
+    menu_type: target_log.menu_type
+  )  
+  # 3. 集まったセットをまとめて全部削除
+  @workout_logs.destroy_all
+    redirect_to user_workout_logs_page_path(current_user), notice: "筋トレ記録を削除しました。"
   end
 
   # 種目別グラフ用（推定1RM推移）

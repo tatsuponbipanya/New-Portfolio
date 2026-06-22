@@ -63,6 +63,7 @@
           <p class="px-4 py-1 text-[10px] text-slate-400 uppercase tracking-widest">Muscle Training</p>
           <%= link_to "筋トレを始める！", user_workout_logs_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
           <%= link_to "筋トレ記録一覧", user_workout_logs_page_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
+          <%= link_to "MAX重量（1RM）の確認", analytics_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
           <%= link_to "テンプレート作成＋", new_workout_template_path, class: "block px-4 py-2 text-slate-700 hover:bg-emerald-50" %>
           <%= link_to "テンプレート管理", manage_workout_templates_path, class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
           

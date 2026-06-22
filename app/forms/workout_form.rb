@@ -30,9 +30,12 @@ class WorkoutForm
     # これがないと、1セット目が通って2セット目でエラーが出た場合、1セット目の中途半端なデータが残ってしまう。
     ActiveRecord::Base.transaction do
 
+      # ハッシュをキー（"0", "1", "2"）の順に正しくソートしてからループを回す。
+      sorted_sets = sets_attributes.sort_by { |key, _| key.to_i }
+
       # sets_attributes に入ってきた各セットのデータをループで保存する。
       # この _ は「データは入ってくるけど、私は一切使わないから無視する！」という意味の変数名
-      sets_attributes&.each do |_, set_params|
+      sorted_sets.each do |_, set_params|
 
         # 重量と回数の両方が入っているセットだけを保存。
         # create! の後ろについている !は、「もし保存に失敗したら、遠慮なく例外エラーを発生させてね」という合図。これによって、さっきの安全装置（トランザクション）がすぐに発動できるようになっている
@@ -56,9 +59,9 @@ class WorkoutForm
     false
   end
 
-  # home/index.htmlのセット入力欄を生み出すeach ループに、入力エラー時でも正しいデータを届ける。
+  # 筋トレセット入力欄を生み出すeach ループに、入力エラー時でも正しいデータを届ける。
   def sets_attributes_for_render
-    # 1. もしエラーで戻ってきて、送信されたセットデータ（sets_attributes）が存在する場合
+    # 1. もしエラーで戻ってきて、送信されたセットデータ（sets_attributes）が存在する場合、
     if sets_attributes.present?
       # データの形を、ビューのループが処理しやすいように、mapとsortで配列に並び替えて送り返す。
       # （{"0"=>{"weight"=>"83"}, "1"=>{"weight"=>"80"}} の中身だけを、上から順に取り出す）

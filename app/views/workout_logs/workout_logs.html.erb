@@ -34,7 +34,7 @@
     
     <%# === 1. スマホ用レイアウト（デフォルト表示、PCでは非表示 hidden sm:blockなし） === %>
     <div class="block sm:hidden space-y-4 mb-6">
-      <% @workout_logs.group_by { |log| [log.workout_date.strftime("%Y/%m/%d %H:%M"), log.menu_type] }.each do |(date_str, menu_type), logs| %>
+      <% @workout_logs.group_by { |log| [log.workout_date.in_time_zone.strftime("%Y/%m/%d %H:%M"), log.menu_type] }.each do |(date_str, menu_type), logs| %>
         <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 font-bold relative">
           
           <%# 日付と操作ボタンの行 %>
@@ -58,7 +58,7 @@
 
           <%# セット内容と1RMのリスト %>
           <div class="bg-white border border-slate-100 rounded p-2 space-y-2">
-            <% logs.each_with_index do |log, index| %>
+            <% logs.sort_by(&:id).each_with_index do |log, index| %>
               <div class="flex justify-between items-center text-sm">
                 <div>
                   <span class="text-slate-500 text-xs w-10 inline-block"><%= index + 1 %>set:</span>
@@ -88,7 +88,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          <% @workout_logs.group_by { |log| [log.workout_date.strftime("%Y/%m/%d %H:%M"), log.menu_type] }.each do |(date_str, menu_type), logs| %>
+          <% @workout_logs.group_by { |log| [log.workout_date.in_time_zone.strftime("%Y/%m/%d %H:%M"), log.menu_type] }.each do |(date_str, menu_type), logs| %>
             <tr class="hover:bg-slate-50 transition duration-150">
               <td class="p-3 text-slate-600 text-sm whitespace-nowrap align-top"><%= date_str %></td>
               <td class="p-3 text-sm align-top">
@@ -96,7 +96,7 @@
               </td>
               <td class="p-3 text-slate-800 align-top">
                 <div class="flex flex-col space-y-1">
-                  <% logs.each_with_index do |log, index| %>
+                  <% logs.sort_by(&:id).each_with_index do |log, index| %>
                     <div class="flex items-center text-sm h-6">
                       <span class="text-slate-500 text-xs w-12 inline-block"><%= index + 1 %>set:</span>
                       <span><strong><%= log.weight %></strong> kg × <strong><%= log.reps %></strong> 回</span>
