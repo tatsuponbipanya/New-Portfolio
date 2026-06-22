@@ -50,7 +50,7 @@
   <%# 月の見出しと合計値 %>
   <div class="bg-blue-50 border-l-4 border-blue-600 p-3 mb-6 rounded-r-lg shadow-sm">
     <h3 class="text-lg font-black text-slate-800"><%= @selected_month.strftime("%Y年%m月") %>の記録</h3>
-    <p class="text-sm font-bold text-slate-600 mt-1 flex items-center gap-4">
+    <p class="text-sm font-bold text-slate-600 mt-1.5 flex flex-col sm:flex-row sm:items-center gap-y-1 gap-x-4">
       <span>🏃‍♂️ 月間走行距離: <span class="text-blue-600 text-base"><%= total_distance %> km</span></span>
       <span>⏱️ 月間走行時間: <span class="text-blue-600 text-base"><%= "#{total_h}時間 " if total_h > 0 %><%= "#{total_m}分#{total_s}秒" %></span></span>
     </p>
