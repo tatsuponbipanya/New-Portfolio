@@ -37,5 +37,6 @@ https://new-portfolio-eqo4.onrender.com/
 * **定期実行 (Cron)**: GitHub Actions (API連携による無料の定期実行処理を構築)
 * **CI/CD (自動テスト)**: GitHub Actions (MainブランチへのPush/PR時に、RuboCopによるコード解析およびRSpecによる自動テストを実行)
 * **本番エラー監視**: Sentry (本番環境での例外検知・エラーハンドリング体制を構築し、リリース後の運用・保守を想定した開発)
+* **パフォーマンス最適化**: Bullet (開発環境でのN+1問題を検知・撃退し、データベースへの発行クエリを最適化)
 * **バージョン管理**: GitHub
 * **テスト / デバッグ**: RSpec, debug gem
