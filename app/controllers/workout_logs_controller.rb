@@ -1,5 +1,4 @@
 class WorkoutLogsController < ApplicationController
-
   def index
     if current_user
       # 1セット用のインスタンスではなく、WorkoutFormの空の箱を用意する
@@ -17,12 +16,12 @@ class WorkoutLogsController < ApplicationController
   def create
     # 送られてきた3セット分のデータを、Formオブジェクトに丸ごと渡す
     @workout_form = WorkoutForm.new(workout_form_params)
-    
+
     # ログイン中のユーザーIDをフォームオブジェクトにセットする
     @workout_form.user_id = current_user.id
 
     if @workout_form.save
-      redirect_to user_workout_logs_page_path(current_user), notice: "筋トレが記録されました！"
+      redirect_to user_workout_logs_page_path(current_user), notice: '筋トレが記録されました！'
     else
       @workout_logs = current_user.workout_logs.order(workout_date: :desc)
       @templates = current_user.workout_templates
@@ -32,15 +31,15 @@ class WorkoutLogsController < ApplicationController
 
   def destroy
     # 1. まず、クリックされた特定の1セットの記録を取得する
-    target_log = current_user.workout_logs.find(params[:id])  
+    target_log = current_user.workout_logs.find(params[:id])
     # 2. その記録と同じ「日付（秒まで一致）」かつ「種目名」のデータをすべて集める
     @workout_logs = current_user.workout_logs.where(
-    workout_date: target_log.workout_date,
-    menu_type: target_log.menu_type
-  )  
-  # 3. 集まったセットをまとめて全部削除
-  @workout_logs.destroy_all
-    redirect_to user_workout_logs_page_path(current_user), notice: "筋トレ記録を削除しました。"
+      workout_date: target_log.workout_date,
+      menu_type: target_log.menu_type
+    )
+    # 3. 集まったセットをまとめて全部削除
+    @workout_logs.destroy_all
+    redirect_to user_workout_logs_page_path(current_user), notice: '筋トレ記録を削除しました。'
   end
 
   # 種目別グラフ用（推定1RM推移）
@@ -85,7 +84,7 @@ class WorkoutLogsController < ApplicationController
     params.require(:workout_form).permit(
       :workout_date,
       :menu_type,
-      sets_attributes: [:id, :workout_type_id, :weight, :reps, :set_number, :menu_type, :body_part]
+      sets_attributes: %i[id workout_type_id weight reps set_number menu_type body_part]
     )
   end
 end

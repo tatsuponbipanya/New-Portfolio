@@ -14,8 +14,8 @@ class Shoe < ApplicationRecord
 
   # 未来の日付は登録させない
   def bought_on_cannot_be_in_the_future
-    if bought_on.present? && bought_on > Date.today
-      errors.add(:bought_on, "は未来の日付を選択できません")
-    end
+    return unless bought_on.present? && bought_on > Date.today
+
+    errors.add(:bought_on, 'は未来の日付を選択できません')
   end
 end

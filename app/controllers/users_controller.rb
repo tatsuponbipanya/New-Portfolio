@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-before_action :ensure_correct_user, only: [:edit, :update]
+  before_action :ensure_correct_user, only: %i[edit update]
 
   def new
     @user = User.new
@@ -15,7 +15,7 @@ before_action :ensure_correct_user, only: [:edit, :update]
     if @user.save
       # 登録したら、そのまま自動ログイン
       session[:user_id] = @user.id
-      redirect_to root_path, notice: "ユーザー登録が完了しました。"
+      redirect_to root_path, notice: 'ユーザー登録が完了しました。'
     else
       # データを保存する画面の失敗には、422（unprocessable_entity）を添える。これがないと、中身がエラーなのに通信は成功することで、Turboなどが正常だと勘違いし、バグる原因になる。
       render :new, status: :unprocessable_entity
@@ -27,13 +27,12 @@ before_action :ensure_correct_user, only: [:edit, :update]
   end
 
   # before_actionのensure_correct_userで@userを見つけているため、editには何も書かなくて良い。
-  def edit
-  end
+  def edit; end
 
   def update
     if @user.update(user_params)
       # 編集が成功したら、そのユーザーのページ（show）に飛ばす
-      redirect_to user_path(@user), notice: "プロフィールを編集しました。"
+      redirect_to user_path(@user), notice: 'プロフィールを編集しました。'
     else
       # 編集が失敗（バリデーションに引っかかる）したら、編集画面を再表示。データを保存する画面の失敗には、422（unprocessable_entity）を添える。
       render :edit, status: :unprocessable_entity
@@ -51,9 +50,9 @@ before_action :ensure_correct_user, only: [:edit, :update]
   def ensure_correct_user
     @user = User.find(params[:id])
 
-    if @user != current_user
-      flash[:alert] = "他のユーザーのプロフィールは編集できません。"
-      redirect_to root_path
-    end
+    return unless @user != current_user
+
+    flash[:alert] = '他のユーザーのプロフィールは編集できません。'
+    redirect_to root_path
   end
 end

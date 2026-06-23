@@ -28,10 +28,10 @@ RSpec.describe WorkoutForm, type: :model do
       it '保存に成功すること' do
         form = WorkoutForm.new(valid_attributes)
         result = form.save
-        
+
         unless result
           puts "\n=================================================="
-          puts "【まだエラーが出る場合の生内容】"
+          puts '【まだエラーが出る場合の生内容】'
           puts form.errors.full_messages
           puts "==================================================\n"
         end

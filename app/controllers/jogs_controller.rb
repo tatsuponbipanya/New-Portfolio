@@ -10,11 +10,11 @@ class JogsController < ApplicationController
     @available_months = base_jogs.pluck(:date).compact.map(&:beginning_of_month).uniq.sort.reverse
 
     # 2. URLのパラメータ（?month=2026-06など）があればその月を、なければ「今月」を選択状態にする
-    if params[:month].present?
-      @selected_month = Date.parse(params[:month] + "-01")
-    else
-      @selected_month = Date.current.beginning_of_month
-    end
+    @selected_month = if params[:month].present?
+                        Date.parse(params[:month] + '-01')
+                      else
+                        Date.current.beginning_of_month
+                      end
 
     # 3. 選択された月（1日〜月末）のデータだけに絞り込んでビューに渡す
     @jogs = base_jogs.where(date: @selected_month.all_month)
@@ -31,10 +31,10 @@ class JogsController < ApplicationController
     @jog = Jog.new(jog_params)
 
     if @jog.save
-      redirect_to user_jogs_path(@user), notice: "ランニングを記録しました！"
+      redirect_to user_jogs_path(@user), notice: 'ランニングを記録しました！'
     else
       @shoes = @user.shoes
-      flash.now[:danger] = "保存に失敗しました。"
+      flash.now[:danger] = '保存に失敗しました。'
       render :new, status: :unprocessable_entity
     end
   end
@@ -47,24 +47,20 @@ class JogsController < ApplicationController
   def update
     @user = User.find(params[:user_id])
     @jog = Jog.find(params[:id])
-    
+
     # 変更前の「古い距離」と「古いシューズ」をキープしておく
     old_distance = @jog.distance.to_f
     old_shoe = @jog.shoe
-    
+
     if @jog.update(jog_params)
       # ① まず、編集前の古いシューズの累計距離から、古いジョグの距離を引く
-      if old_shoe
-        old_shoe.update(total_distance: old_shoe.total_distance.to_f - old_distance)
-      end
-      
+      old_shoe.update(total_distance: old_shoe.total_distance.to_f - old_distance) if old_shoe
+
       # ② 次に、編集後の新しいシューズ（同じ靴でもOK）に、新しいジョグの距離を足す
       new_shoe = @jog.shoe
-      if new_shoe
-        new_shoe.update(total_distance: new_shoe.total_distance.to_f + @jog.distance.to_f)
-      end
+      new_shoe.update(total_distance: new_shoe.total_distance.to_f + @jog.distance.to_f) if new_shoe
 
-      redirect_to user_jogs_path(@user), notice: "走行記録を更新しました！"
+      redirect_to user_jogs_path(@user), notice: '走行記録を更新しました！'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -72,7 +68,7 @@ class JogsController < ApplicationController
 
   def destroy
     @jog = Jog.find(params[:id])
-    
+
     # 自分の靴（データ）の記録、または自分のログであるかを確認して削除
     if @jog.shoe.user_id == current_user.id
       @jog.destroy
@@ -103,21 +99,23 @@ class JogsController < ApplicationController
     @total_m = (total_seconds % 3600) / 60
     @total_s = total_seconds % 60
 
-  # 5. 折れ線グラフ用のデータ作成（1月〜12月）
+    # 5. 折れ線グラフ用のデータ作成（1月〜12月）
     monthly_data = @jogs_of_year.group_by { |j| j.date.month }
-    
+
     # グラフを2つに分けるためのハッシュを用意
     @distance_chart_data = {}
     @time_chart_data = {}
 
     (1..12).each do |month|
       jogs_in_month = monthly_data[month] || []
-      
+
       # その月の合計距離 (km)
       @distance_chart_data["#{month}月"] = jogs_in_month.sum(&:distance).round(2)
-      
+
       # その月の合計時間 (分)
-      @time_chart_data["#{month}月"] = jogs_in_month.sum { |j| (j.time_hour.to_i * 60) + j.time_minute.to_i + (j.time_second.to_f / 60) }.round(1)
+      @time_chart_data["#{month}月"] = jogs_in_month.sum do |j|
+        (j.time_hour.to_i * 60) + j.time_minute.to_i + (j.time_second.to_f / 60)
+      end.round(1)
     end
   end
 
@@ -125,7 +123,7 @@ class JogsController < ApplicationController
 
   def jog_params
     params.require(:jog).permit(
-      :shoe_id, :date, :distance, :heart_rate, 
+      :shoe_id, :date, :distance, :heart_rate,
       :time_hour, :time_minute, :time_second, :pace_minute, :pace_second, :memo
     )
   end

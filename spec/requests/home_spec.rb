@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Dashboards", type: :request do
+RSpec.describe 'Dashboards', type: :request do
   # テスト用のユーザーを準備
   let(:user) do
     User.create!(
@@ -18,8 +18,8 @@ RSpec.describe "Dashboards", type: :request do
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
   end
 
-  describe "ヘッダーとダッシュボード画面のアクセス" do
-    it "各ページへのリンクが正しく表示されていること" do
+  describe 'ヘッダーとダッシュボード画面のアクセス' do
+    it '各ページへのリンクが正しく表示されていること' do
       # 1. ダッシュボードのパスへアクセス
       get root_path
 

@@ -10,42 +10,41 @@ RSpec.describe WorkoutLog, type: :model do
     )
   end
 
-  it "全ての項目が入力されていれば有効であること" do
+  it '全ての項目が入力されていれば有効であること' do
     workout_log = WorkoutLog.new(
       user_id: user.id,
       workout_date: Date.today,
-      menu_type: "ベンチプレス",
+      menu_type: 'ベンチプレス',
       weight: 83.0,
       reps: 1
     )
     expect(workout_log).to be_valid
   end
 
-  it "種目名が未入力の場合は無効であること" do
-    workout_log = WorkoutLog.new(    
+  it '種目名が未入力の場合は無効であること' do
+    workout_log = WorkoutLog.new(
       user_id: user.id,
       workout_date: Date.today,
-      menu_type: "", # 未入力
+      menu_type: '', # 未入力
       weight: 83.0,
       reps: 1
     )
     expect(workout_log).not_to be_valid
   end
 
-    # === 部位判定メソッドのテスト ===
+  # === 部位判定メソッドのテスト ===
   describe '#body_part' do
     it 'ベンチプレスやの場合、胸が返ってくること' do
       log1 = WorkoutLog.new(menu_type: 'ベンチプレス')
-      
-      expect(log1.body_part).to eq "胸"
+
+      expect(log1.body_part).to eq '胸'
     end
 
     it 'チンニングの場合、背中が返ってくること' do
       log = WorkoutLog.new(menu_type: 'チンニング')
-      expect(log.body_part).to eq "背中"
+      expect(log.body_part).to eq '背中'
     end
   end
-
 
   # === 1RM計算メソッドのテスト ===
   describe '#estimated_1rm' do
