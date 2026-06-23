@@ -16,7 +16,7 @@ RSpec.describe 'ユーザーログインの自動テスト', type: :system do
 
     # 4. ログイン後の画面に「ログインしました」などのメッセージが出ているか検証
     expect(page).to have_content 'ログインしました'
-    
+
     # 5. 現在のURLが、ちゃんとトップページになっているか検証
     expect(current_path).to eq root_path
   end
