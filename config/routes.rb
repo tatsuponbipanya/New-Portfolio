@@ -12,6 +12,11 @@ Rails.application.routes.draw do
   # スマホ通知用
   post '/notification_subscriptions', to: 'notification_subscriptions#create'
 
+  # スマホ通知用（Github Actions）
+  namespace :api do
+    post 'cron_tasks/send_daily', to: 'cron_tasks#send_daily'
+  end
+
   # 筋トレ関連
   # 筋トレ開始
   get 'users/:id/workout_logs/new', to: 'workout_logs#index', as: :user_workout_logs

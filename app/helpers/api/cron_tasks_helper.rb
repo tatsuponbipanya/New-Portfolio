@@ -1,0 +1,2 @@
+module Api::CronTasksHelper
+end

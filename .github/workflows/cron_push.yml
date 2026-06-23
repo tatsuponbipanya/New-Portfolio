@@ -1,0 +1,16 @@
+name: Daily Push Notification Cron
+
+on:
+  schedule:
+    # 毎日、日本時間の夜「21:00」に自動実行する設定
+    # GitHubは世界標準時（UTC）なので、21時から9時間引いた「12:00」を指定
+    - cron: '0 12 * * *'
+
+jobs:
+  trigger_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Rails Push Endpoint
+        run: |
+          curl -X POST https://new-portfolio-eqo4.onrender.com/api/cron_tasks/send_daily \
+            -H "Authorization: Bearer ${{ secrets.CRON_TOKEN }}"
