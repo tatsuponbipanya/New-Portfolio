@@ -4,7 +4,7 @@ class JogsController < ApplicationController
   # その人のジョグ記録を表示（月ごとの絞り込み機能つき）
   def index
     @user = User.find(params[:user_id])
-    base_jogs = Jog.where(shoe_id: @user.shoes.pluck(:id)).order(date: :desc, id: :desc)
+    base_jogs = Jog.includes(:shoe).where(shoe_id: @user.shoes.pluck(:id)).order(date: :desc, id: :desc)
 
     # 1. タブに表示するための「記録が存在する月」のリストを作成（重複排除して新しい順）
     @available_months = base_jogs.pluck(:date).compact.map(&:beginning_of_month).uniq.sort.reverse

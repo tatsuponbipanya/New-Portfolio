@@ -37,9 +37,12 @@ group :development, :test do
   # 開発環境とテスト環境では SQLite を使う
   gem 'sqlite3', '>= 2.1'
 
-  # テストコード自動整形RuboCopくん
+  # コード自動整形RuboCopくん
   gem 'rubocop', require: false
   gem 'rubocop-rails', require: false
+
+  # N+1問題のアラート
+  gem 'bullet'
 end
 
 # 本番環境（production）で PostgreSQL を使う

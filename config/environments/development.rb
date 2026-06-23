@@ -15,6 +15,14 @@ Rails.application.configure do
   # Enable server timing.
   config.server_timing = true
 
+  # Bullet（N+1問題の見張り番）の設定
+  config.after_initialize do
+    Bullet.enable        = true # Bulletを有効にする
+    Bullet.alert         = true # N+1を見つけたらブラウザにJavaScriptのアラート（ポップアップ）を出す
+    Bullet.bullet_logger = true # log/bullet.log にも詳しい原因を書き残す
+    Bullet.console       = true # ブラウザの検証画面（デベロッパーツール）のコンソールにも出す
+  end
+
   # Enable/disable Action Controller caching. By default Action Controller caching is disabled.
   # Run rails dev:cache to toggle Action Controller caching.
   if Rails.root.join('tmp/caching-dev.txt').exist?
