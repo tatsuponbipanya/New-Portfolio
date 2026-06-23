@@ -33,6 +33,7 @@ https://new-portfolio-eqo4.onrender.com/
 * **本番環境**: PostgreSQL (Supabase)
 
 ### インフラ / 開発ツール
+* **開発環境 (Docker)**: Docker / Docker Compose (開発環境を完全にコンテナ化し、OSに依存しないモダンで再現性の高いローカル開発環境を構築)
 * **ホスティング**: Render
 * **定期実行 (Cron)**: GitHub Actions (API連携による無料の定期実行処理を構築)
 * **CI/CD (自動テスト)**: GitHub Actions (MainブランチへのPush/PR時に、RuboCopによるコード解析およびRSpecによる自動テストを実行)
