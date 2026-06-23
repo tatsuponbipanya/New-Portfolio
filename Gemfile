@@ -34,6 +34,10 @@ group :development, :test do
 
   # 開発環境とテスト環境では SQLite を使う
   gem "sqlite3", ">= 2.1"
+
+  # テストコード自動整形RuboCopくん
+  gem 'rubocop', require: false
+  gem 'rubocop-rails', require: false
 end
 
 
