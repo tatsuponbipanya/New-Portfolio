@@ -35,5 +35,6 @@ https://new-portfolio-eqo4.onrender.com/
 ### インフラ / 開発ツール
 * **ホスティング**: Render
 * **定期実行 (Cron)**: GitHub Actions (API連携による無料の定期実行処理を構築)
+* **CI/CD (自動テスト)**: GitHub Actions (MainブランチへのPush/PR時に、RuboCopによるコード解析およびRSpecによる自動テストを実行)
 * **バージョン管理**: GitHub
 * **テスト / デバッグ**: RSpec, debug gem
