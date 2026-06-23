@@ -8,6 +8,9 @@ class User < ApplicationRecord
     has_many :workout_templates, dependent: :destroy
     has_many :shoes, dependent: :destroy
 
+    # スマホ通知用。ユーザーが削除されたら通知の宛先も一緒に消す。
+    has_many :notification_subscriptions, dependent: :destroy
+
     validates :name, presence: true
     validates :email, presence: true, uniqueness: true
 end

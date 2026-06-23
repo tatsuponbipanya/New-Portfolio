@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_19_051833) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_22_102552) do
   create_table "jogs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "date"
@@ -25,6 +25,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_19_051833) do
     t.integer "time_second"
     t.datetime "updated_at", null: false
     t.index ["shoe_id"], name: "index_jogs_on_shoe_id"
+  end
+
+  create_table "notification_subscriptions", force: :cascade do |t|
+    t.string "auth"
+    t.datetime "created_at", null: false
+    t.string "endpoint"
+    t.string "p256dh"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_notification_subscriptions_on_user_id"
   end
 
   create_table "shoes", force: :cascade do |t|
@@ -80,6 +90,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_19_051833) do
   end
 
   add_foreign_key "jogs", "shoes"
+  add_foreign_key "notification_subscriptions", "users"
   add_foreign_key "shoes", "users"
   add_foreign_key "workout_logs", "users"
   add_foreign_key "workout_template_sets", "workout_templates"

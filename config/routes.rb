@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   # トップページ
   root 'home#index'
 
+  # スマホ通知用
+  post '/notification_subscriptions', to: 'notification_subscriptions#create'
+
   # 筋トレ関連
   # 筋トレ開始
   get 'users/:id/workout_logs/new', to: 'workout_logs#index', as: :user_workout_logs
@@ -33,11 +36,12 @@ Rails.application.routes.draw do
   get 'signup', to: 'users#new'
   post 'users', to: 'users#create'
 
-# シューズ管理とジョギング記録
+  # シューズ管理とジョギング記録
   resources :users, only: [:index, :show, :edit, :update] do
     # shoesは index だけをユーザーに紐づける（これがマイシューズページ）
     resources :shoes, only: [:index]
     resources :jogs, only: [:index, :new, :create, :edit, :update, :destroy] do
+      # 年間記録はデータ全体を扱うページなので、URLにIDは不要。collection doでIDを消す（IDが必要なのは、特定の1件のデータを扱うページのみ）。
       collection do
         get :annual
       end

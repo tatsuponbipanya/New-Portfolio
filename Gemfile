@@ -11,11 +11,18 @@ gem "puma", ">= 5.0"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
-#CSS用の最新のツール
+# CSS用の最新のツール
 gem "tailwindcss-rails"
 
-#最強のパスワード暗号化（ハッシュ化）
+# 最強のパスワード暗号化（ハッシュ化）
 gem 'bcrypt', '~> 3.1.7'
+
+# スマホ通知を飛ばすためのVAPIDキー作成など
+gem 'web-push'
+# スマホ通知を定期的に飛ばすジェム
+gem 'whenever', require: false
+
+
 
 # 開発・テスト用
 group :development, :test do
@@ -28,6 +35,8 @@ group :development, :test do
   # 開発環境とテスト環境では SQLite を使う
   gem "sqlite3", ">= 2.1"
 end
+
+
 
 # 本番環境（production）で PostgreSQL を使う
 group :production do

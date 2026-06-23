@@ -12,6 +12,7 @@
     <%# すべてのCSSとJSはここでまとめて読み込む %>
     <%= stylesheet_link_tag :app %>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <%= javascript_include_tag "push_notification", defer: true, type: "module" %>
 
     <link rel="icon" href="/icon.png?v=2" type="image/png">
     <link rel="apple-touch-icon" href="/icon.png">
@@ -29,6 +30,9 @@
           .catch(error => console.log('PWA登録失敗:', error));
       }
     </script>
+
+    <%# PWAのWeb Push用の公開鍵をJavaScriptに渡すタグ %>
+    <meta name="vapid-public-key" content="<%= Rails.application.credentials.dig(:vapid, :public_key) %>">
 
   </head>
 
