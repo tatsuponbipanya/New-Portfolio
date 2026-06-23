@@ -34,6 +34,7 @@
     <%# PWAのWeb Push用の公開鍵をJavaScriptに渡すタグ %>
     <meta name="vapid-public-key" content="<%= Rails.application.credentials.dig(:vapid, :public_key) %>">
 
+    <%= Sentry.get_trace_propagation_meta.html_safe %>
   </head>
 
   <body class="bg-slate-50 text-slate-800">

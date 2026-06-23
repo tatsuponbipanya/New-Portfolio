@@ -22,6 +22,12 @@ gem 'web-push'
 # スマホ通知を定期的に飛ばすジェム
 gem 'whenever', require: false
 
+# 自動エラー検知機能
+gem "sentry-ruby"
+gem "sentry-rails"
+
+
+
 # 開発・テスト用
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -37,6 +43,8 @@ group :development, :test do
   gem 'rubocop', require: false
   gem 'rubocop-rails', require: false
 end
+
+
 
 # 本番環境（production）で PostgreSQL を使う
 group :production do
