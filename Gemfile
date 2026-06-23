@@ -23,10 +23,8 @@ gem 'web-push'
 gem 'whenever', require: false
 
 # 自動エラー検知機能
-gem "sentry-ruby"
-gem "sentry-rails"
-
-
+gem 'sentry-rails'
+gem 'sentry-ruby'
 
 # 開発・テスト用
 group :development, :test do
@@ -43,8 +41,6 @@ group :development, :test do
   gem 'rubocop', require: false
   gem 'rubocop-rails', require: false
 end
-
-
 
 # 本番環境（production）で PostgreSQL を使う
 group :production do
