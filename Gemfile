@@ -43,6 +43,10 @@ group :development, :test do
 
   # N+1問題のアラート
   gem 'bullet'
+
+  # E2Eテスト用　本物のブラウザを自動操作する
+  gem 'capybara'
+  gem 'selenium-webdriver'
 end
 
 # 本番環境（production）で PostgreSQL を使う
