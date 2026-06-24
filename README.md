@@ -1,6 +1,7 @@
 # README
 
 # Portfolio V2 (筋トレ＆ランニング記録アプリ)
+<img width="1257" height="684" alt="ダッシュボード" src="https://github.com/user-attachments/assets/b8be2fde-4ade-4e23-bbd6-6b0a68c4208d" />
 
 筋トレやランニングのパフォーマンスを最大限に高めるための、記録・分析アプリケーションです。
 スマホからストレスなく「サクッと記録」し、成長を可視化出来るように開発しました。
