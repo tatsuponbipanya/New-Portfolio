@@ -55,4 +55,4 @@ group :production do
 end
 gem 'chartkick', '~> 5.2'
 
-gem "stripe", "~> 19.2"
+gem 'stripe', '~> 19.2'

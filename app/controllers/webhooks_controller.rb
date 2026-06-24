@@ -15,11 +15,11 @@ class WebhooksController < ApplicationController
       event = Stripe::Webhook.construct_event(
         payload, sig_header, endpoint_secret
       )
-    rescue JSON::ParserError => e
+    rescue JSON::ParserError
       # データが壊れていた場合
       render status: 400
       return
-    rescue Stripe::SignatureVerificationError => e
+    rescue Stripe::SignatureVerificationError
       # 偽物からのアクセスだった場合
       render status: 400
       return
@@ -29,19 +29,19 @@ class WebhooksController < ApplicationController
     case event.type
     when 'checkout.session.completed'
       session = event.data.object
-      
+
       # Stripeから記憶させたユーザーIDを回収
       user_id = session.client_reference_id
-      
+
       # データベースからそのユーザーを探し出して、プレミアムにする
       user = User.find_by(id: user_id)
-      
+
       if user
         user.update!(premium: true)
-        
-        puts "===================================="
+
+        puts '===================================='
         puts "【大成功】#{user.name}さんがプレミアム会員になりました！"
-        puts "===================================="
+        puts '===================================='
       else
         puts "ユーザーが見つかりませんでした (User ID: #{user_id})"
       end
