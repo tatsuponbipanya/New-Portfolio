@@ -29,6 +29,11 @@ https://new-portfolio-eqo4.onrender.com/
 * **Chartkick**: 筋トレ・ランニングの年間記録の推移や、種目別の割合等を視覚化するために導入。
 * **Google Charts**: Chartkickの裏側で動くグラフ描画エンジンとして使用。
 
+### 外部API連携 / 決済システム
+* **Stripe Checkout**: クレジットカード情報の非保持化と、安全な決済フロー（テスト環境）の構築。
+* **Stripe Webhook**: 決済完了後の非同期通信（イベント通知）をRailsのエンドポイントで受け取り、ユーザーのプレミアム会員ステータスを自動更新するバックエンド処理を実装。
+* **Stripe CLI**: ローカル（WSL）開発環境におけるWebhookのトンネリングと決済テストの自動化。
+
 ### データベース
 * **開発環境**: SQLite3
 * **本番環境**: PostgreSQL (Supabase)
