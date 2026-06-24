@@ -17,13 +17,8 @@ class WebhooksController < ApplicationController
       event = Stripe::Webhook.construct_event(
         payload, sig_header, endpoint_secret
       )
-    rescue JSON::ParserError
-      # データが壊れていた場合
-      render status: 400
-      return
-    rescue Stripe::SignatureVerificationError
-      # 偽物からのアクセスだった場合
-      render status: 400
+    rescue JSON::ParserError, Stripe::SignatureVerificationError
+      render json: { message: 'Invalid payload' }, status: 400
       return
     end
 

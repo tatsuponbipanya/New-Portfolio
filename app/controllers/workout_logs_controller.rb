@@ -72,9 +72,9 @@ class WorkoutLogsController < ApplicationController
     @workout_logs = @user.workout_logs.order(workout_date: :desc, id: :desc)
 
     # 筋トレ比率（円グラフ用）のデータを部位ごとに集計してハッシュ化
-    @chart_data = @workout_logs.group_by(&:body_part).map do |part, logs|
+    @chart_data = @workout_logs.group_by(&:body_part).to_h do |part, logs|
       [part, logs.sum { |log| log.weight * log.reps }]
-    end.to_h
+    end
   end
 
   private

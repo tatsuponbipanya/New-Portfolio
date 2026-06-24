@@ -31,6 +31,6 @@ class WorkoutLog < ApplicationRecord
     return 0.0 if weight.blank? || reps.blank?
     return weight.to_f if reps <= 1 # 1回以下のときは、そのままの重量を返す
 
-    (weight * (1 + reps / 30.0)).round(1)
+    (weight * (1 + (reps / 30.0))).round(1)
   end
 end

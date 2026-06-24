@@ -6,7 +6,7 @@ class Api::CronTasksController < ApplicationController
   # rubocop:disable Metrics/MethodLength
   def send_daily
     # GitHubから送られてくる合言葉が、Railsの秘密鍵と一致するかチェック
-    if request.headers['Authorization'] == "Bearer #{ENV['CRON_TOKEN']}"
+    if request.headers['Authorization'] == "Bearer #{ENV.fetch('CRON_TOKEN', nil)}"
 
       # ランダムで送るメッセージの候補（配列の中にハッシュを入れる）
       daily_messages = [
