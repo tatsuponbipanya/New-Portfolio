@@ -40,6 +40,7 @@ group :development, :test do
   # コード自動整形RuboCopくん
   gem 'rubocop', require: false
   gem 'rubocop-rails', require: false
+  gem 'rubocop-discourse', require: false
 
   # N+1問題のアラート
   gem 'bullet'
