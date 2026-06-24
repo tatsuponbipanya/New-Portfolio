@@ -1,6 +1,6 @@
 <h1 class="text-3xl font-bold text-slate-800 mb-6 text-center">友達一覧！</h1>
 
-<div class="users-list bg-white rounded shadow p-4 overflow-x-auto">
+<div class="users-list bg-[#ffffff] rounded shadow p-4 overflow-x-auto">
   <table class="w-full border-collapse text-left font-bold">
     <thead>
       <tr class="bg-slate-100 border-b-2 border-slate-200 text-slate-700">
@@ -12,8 +12,19 @@
     <tbody class="divide-y divide-slate-100">
       <% @users.each do |user| %>
         <tr class="hover:bg-slate-50 transition duration-150">
-          <%# 👤 ユーザー名 %>
-          <td class="p-3 text-slate-800 font-bold"><%= user.name %></td>
+          <%# 👤 ユーザー名と会員ステータスバッジ %>
+          <td class="p-3">
+            <div class="flex items-center gap-2">
+              <span class="text-slate-800 font-bold"><%= user.name %></span>
+              
+              <%# ここで会員ステータスを判定してバッジを出す %>
+              <% if user.premium? %>
+                <span class="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded border border-amber-200">👑 プレミアム</span>
+              <% else %>
+                <span class="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200">一般</span>
+              <% end %>
+            </div>
+          </td>
           
           <%# 自己紹介（長すぎると表が崩れるから truncate で1行に省略） %>
           <td class="p-3 text-slate-600 font-medium max-w-xs truncate">

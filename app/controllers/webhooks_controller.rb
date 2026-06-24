@@ -30,13 +30,21 @@ class WebhooksController < ApplicationController
     when 'checkout.session.completed'
       session = event.data.object
       
-      # 決済が成功した時の処理
+      # Stripeから記憶させたユーザーIDを回収
+      user_id = session.client_reference_id
       
-      puts "===================================="
-      puts "決済完了の通知を受け取りました"
-      puts "セッションID: #{session.id}"
-      puts "金額: #{session.amount_total}円"
-      puts "===================================="
+      # データベースからそのユーザーを探し出して、プレミアムにする
+      user = User.find_by(id: user_id)
+      
+      if user
+        user.update!(premium: true)
+        
+        puts "===================================="
+        puts "【大成功】#{user.name}さんがプレミアム会員になりました！"
+        puts "===================================="
+      else
+        puts "ユーザーが見つかりませんでした (User ID: #{user_id})"
+      end
     end
 
     # 最後にStripeへ「無事に受け取ったよ！」と200 OKを返す（これがないとStripeが何度も再送してくる）

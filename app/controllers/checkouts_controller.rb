@@ -3,6 +3,10 @@ class CheckoutsController < ApplicationController
     # Stripeの決済画面（セッション）を作成する
     session = Stripe::Checkout::Session.create({
       payment_method_types: ['card'],
+
+      # ログイン中のユーザーIDをStripeに記憶させる
+      client_reference_id: current_user.id,
+
       line_items: [{
         price_data: {
           currency: 'jpy',                 # 日本円

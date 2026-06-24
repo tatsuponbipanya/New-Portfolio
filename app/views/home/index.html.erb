@@ -57,23 +57,32 @@
     </div>
 
     <%# === 3. アカウント管理カード === %>
-    <div class="bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-purple-500 transition duration-200 flex flex-col justify-between font-bold">
+    <div class="bg-[#ffffff] border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-purple-500 transition duration-200 flex flex-col justify-between font-bold">
       <div>
         <div class="flex items-center gap-2 mb-3">
           <span class="text-2xl">👤</span>
           <h2 class="text-lg font-black text-slate-800">Account</h2>
+          
+          <%# ここで会員ステータスのバッジを切り替える %>
+          <% if current_user.premium? %>
+            <span class="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-md border border-amber-200 ml-auto">👑 プレミアム会員</span>
+          <% else %>
+            <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-md border border-slate-200 ml-auto">一般会員</span>
+          <% end %>
         </div>
         <p class="text-xs text-slate-400 font-medium mb-4">ご自身のプロフィール確認や、筋トレ仲間の進捗チェックはこちら！</p>
         
         <div class="space-y-2 mb-6 text-sm">
           <%= link_to "👀 友達の記録を見る！", users_path, class: "block p-2.5 bg-slate-50 hover:bg-purple-50 text-slate-700 rounded-xl transition border border-slate-100" %>
-
-          <%# クレジット決済はPOSTリクエスト（データを作る）が必要なため、link_toじゃなくbutton_toでないといけない。 %>
-          <%= button_to "💎 500円で開発者を応援する！", checkouts_path, method: :post, data: { turbo: false }, form_class: "block", class: "w-full text-left p-2.5 bg-yellow-50 hover:bg-yellow-100 text-yellow-700 rounded-xl transition border border-yellow-200 cursor-pointer" %>
+          
+          <%# 一般会員のときだけ、応援ボタンを表示 %>
+          <% unless current_user.premium? %>
+            <%= button_to "💎 500円で開発者を応援する！", checkouts_path, method: :post, data: { turbo: false }, form_class: "block", class: "text-left p-2.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-xl transition border border-amber-200 cursor-pointer", style: "inline-size: 100%;" %>
+          <% end %>
         </div>
       </div>
       
-      <%= link_to "マイページ（プロフィール）", user_path(current_user), class: "block w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-xl shadow transition text-center text-sm" %>
+      <%= link_to "マイページ（プロフィール）", user_path(current_user), class: "block bg-purple-600 hover:bg-purple-700 text-[#ffffff] py-3 px-4 rounded-xl shadow transition text-center text-sm", style: "inline-size: 100%;" %>
     </div>
 
   </div>
