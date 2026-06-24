@@ -17,6 +17,11 @@ Rails.application.routes.draw do
     post 'cron_tasks/send_daily', to: 'cron_tasks#send_daily'
   end
 
+  # クレジット決済用（Stripe・Webhook）
+  resources :checkouts, only: [:create]
+  get 'checkout/success', to: 'checkouts#success'
+  post '/webhooks', to: 'webhooks#create'
+
   # 筋トレ関連
   # 筋トレ開始
   get 'users/:id/workout_logs/new', to: 'workout_logs#index', as: :user_workout_logs

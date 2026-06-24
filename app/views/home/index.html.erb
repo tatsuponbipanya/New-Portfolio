@@ -5,11 +5,13 @@
     <p class="text-slate-500 text-sm sm:text-base">ゆっくり記録していってね！</p>
   </div>
 
-  <button id="push-btn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded shadow-sm transition text-sm text-center mt-4">
-    🔔 プッシュ通知をオンにする
-  </button>
+  <div class="text-center mb-8">
+    <button id="push-btn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded shadow-sm transition text-sm">
+      🔔 プッシュ通知をオンにする
+    </button>
+  </div>
 
-  <%# メニューのグリッド配置（スマホは1列、PCは3列で綺麗に並ぶ） %>
+  <%# メニューのグリッド配置（白いカード本体を3つ並べる） %>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     
     <%# === 1. 筋トレ管理カード === %>
@@ -21,11 +23,8 @@
         </div>
         <p class="text-xs text-slate-400 font-medium mb-4">BIG3の記録やボリューム分析、テンプレートの管理はこちらから！</p>
         
-        <%# サブメニューリンク集 %>
         <div class="space-y-2 mb-6 text-sm">
-          <%# 【新設】新しく筋トレを始める（トレーニング開始・作成画面へ） %>
           <%= link_to "🏋️ 筋トレを始める！", user_workout_logs_path(current_user), class: "block p-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition border border-blue-100 text-center" %>
-          
           <%= link_to "＋ テンプレート作成", new_workout_template_path, class: "block p-2.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 rounded-xl transition border border-slate-100" %>
           <%= link_to "⚙️ テンプレート管理", manage_workout_templates_path, class: "block p-2.5 bg-slate-50 hover:bg-blue-50 text-slate-700 rounded-xl transition border border-slate-100" %>
           <%= link_to "📋 筋トレ記録一覧", user_workout_logs_page_path(current_user), class: "block p-2.5 bg-slate-50 hover:bg-blue-50 text-slate-700 rounded-xl transition border border-slate-100" %>
@@ -33,7 +32,6 @@
         </div>
       </div>
       
-      <%# メインアクションボタン %>
       <%= link_to "筋トレ記録の一覧へ", user_workout_logs_page_path(current_user), class: "block w-full bg-slate-800 hover:bg-slate-900 text-white py-3 px-4 rounded-xl shadow transition text-center text-sm" %>
     </div>
 
@@ -46,7 +44,6 @@
         </div>
         <p class="text-xs text-slate-400 font-medium mb-4">ジョグ記録の追加、シューズ登録、それぞれの履歴確認はこちらから！</p>
         
-        <%# サブメニューリンク集 %>
         <div class="space-y-2 mb-6 text-sm">
           <%= link_to "＋ ランニングを記録する", new_user_jog_path(current_user), class: "block p-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl transition border border-emerald-100 text-center" %>
           <%= link_to "📋 月間走行記録", user_jogs_path(current_user), class: "block p-2.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 rounded-xl transition border border-slate-100" %>
@@ -56,37 +53,40 @@
         </div>
       </div>
       
-      <%# メインボタン %>
       <%= link_to "ジョグ履歴の一覧へ", user_jogs_path(current_user), class: "block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-4 rounded-xl shadow transition text-center text-sm" %>
     </div>
 
     <%# === 3. アカウント管理カード === %>
-    <div class="flex flex-col gap-3 font-bold items-center">
-      <%# 白いカード本体 %>
-      <div class="bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-purple-500 transition duration-200 flex flex-col justify-between h-full">
-        <div>
-          <div class="flex items-center gap-2 mb-3">
-            <span class="text-2xl">👤</span>
-            <h2 class="text-lg font-black text-slate-800">Account</h2>
-          </div>
-          <p class="text-xs text-slate-400 font-medium mb-4">ご自身のプロフィール確認や、筋トレ仲間の進捗チェックはこちら！</p>
-          
-          <%# サブメニューリンク集 %>
-          <div class="space-y-2 mb-6 text-sm">
-            <%= link_to "👀 友達の記録を見る！", users_path, class: "block p-2.5 bg-slate-50 hover:bg-purple-50 text-slate-700 rounded-xl transition border border-slate-100" %>
-          </div>
+    <div class="bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-purple-500 transition duration-200 flex flex-col justify-between font-bold">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-2xl">👤</span>
+          <h2 class="text-lg font-black text-slate-800">Account</h2>
         </div>
+        <p class="text-xs text-slate-400 font-medium mb-4">ご自身のプロフィール確認や、筋トレ仲間の進捗チェックはこちら！</p>
         
-        <div>
-          <%= link_to "マイページ（プロフィール）", user_path(current_user), class: "block w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-xl shadow transition text-center text-sm" %>
+        <div class="space-y-2 mb-6 text-sm">
+          <%= link_to "👀 友達の記録を見る！", users_path, class: "block p-2.5 bg-slate-50 hover:bg-purple-50 text-slate-700 rounded-xl transition border border-slate-100" %>
+
+          <%# クレジット決済はPOSTリクエスト（データを作る）が必要なため、link_toじゃなくbutton_toでないといけない。 %>
+          <%= button_to "💎 500円で開発者を応援する！", checkouts_path, method: :post, data: { turbo: false }, form_class: "block", class: "w-full text-left p-2.5 bg-yellow-50 hover:bg-yellow-100 text-yellow-700 rounded-xl transition border border-yellow-200 cursor-pointer" %>
         </div>
       </div>
-
-      <%= button_to "ログアウト", logout_path, method: :delete, 
-                    form_class: "flex justify-center w-full",
-                    class: "w-40 bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 py-3 rounded-xl text-xs text-center cursor-pointer transition font-bold" %>
-      </div>
+      
+      <%= link_to "マイページ（プロフィール）", user_path(current_user), class: "block w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-xl shadow transition text-center text-sm" %>
     </div>
 
   </div>
+
+  <%# === ログアウトボタン専用のグリッド（PCでは3列目、スマホでは直下に配置） === %>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+    <div class="hidden md:block"></div> <%# 1列目の空きスペース %>
+    <div class="hidden md:block"></div> <%# 2列目の空きスペース %>
+    <div>
+      <%= button_to "ログアウト", logout_path, method: :delete, 
+            form_class: "block w-full",
+            class: "w-full bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 py-3 rounded-xl text-xs text-center cursor-pointer transition font-bold shadow-sm" %>
+    </div>
+  </div>
+
 </div>
