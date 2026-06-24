@@ -4,7 +4,7 @@ class Api::CronTasksController < ApplicationController
 
   def send_daily
     # GitHubから送られてくる合言葉が、Railsの秘密鍵と一致するかチェック
-    if request.headers['Authorization'] == "Bearer #{Rails.application.credentials.dig(:cron_token)}"
+    if request.headers['Authorization'] == "Bearer #{ENV['CRON_TOKEN']}"
 
       # 通知送信のロジック
       subscriptions = NotificationSubscription.all
