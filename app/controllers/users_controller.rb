@@ -6,7 +6,8 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.all
+    # IDが小さい順＝登録した順に並び替える
+    @users = User.order(id: :asc)
   end
 
   def create
