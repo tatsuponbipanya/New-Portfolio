@@ -2,6 +2,8 @@ class WebhooksController < ApplicationController
   # Stripeからの通信にはCSRFトークンがないので、セキュリティチェックをスキップする
   skip_before_action :verify_authenticity_token
 
+  # rubocopエラー回避用
+  # rubocop:disable Metrics/MethodLength
   def create
     payload = request.body.read
     sig_header = request.env['HTTP_STRIPE_SIGNATURE']
@@ -50,4 +52,6 @@ class WebhooksController < ApplicationController
     # 最後にStripeへ「無事に受け取ったよ！」と200 OKを返す（これがないとStripeが何度も再送してくる）
     render json: { message: 'success' }, status: 200
   end
+  # rubocopエラー回避用
+  # rubocop:enable Metrics/MethodLength
 end

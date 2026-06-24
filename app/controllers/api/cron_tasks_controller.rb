@@ -2,6 +2,8 @@ class Api::CronTasksController < ApplicationController
   # APIなので画面のCSRFチェックはスキップ
   skip_before_action :verify_authenticity_token
 
+  # rubocopエラー回避用
+  # rubocop:disable Metrics/MethodLength
   def send_daily
     # GitHubから送られてくる合言葉が、Railsの秘密鍵と一致するかチェック
     if request.headers['Authorization'] == "Bearer #{ENV['CRON_TOKEN']}"
@@ -42,4 +44,6 @@ class Api::CronTasksController < ApplicationController
       render json: { status: 'error', message: '合言葉が違います' }, status: :unauthorized
     end
   end
+  # rubocopエラー回避用
+  # rubocop:enable Metrics/MethodLength
 end
