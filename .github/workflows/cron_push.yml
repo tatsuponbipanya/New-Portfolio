@@ -2,9 +2,9 @@ name: Daily Push Notification Cron
 
 on:
   schedule:
-    # 毎日、日本時間の夜「17:00」に自動実行する設定
-    # GitHubは世界標準時（UTC）なので、17時から9時間引いた「8:00」を指定
-    - cron: '14 8 * * *'
+    # 毎日、日本時間の「13:24」に自動実行する設定
+    # GitHubは世界標準時（UTC）なので、13時から9時間引いた「4:24」を指定
+    - cron: '24 4 * * *'
 
 jobs:
   trigger_push:
