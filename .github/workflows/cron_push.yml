@@ -5,6 +5,8 @@ on:
     # 毎日、日本時間の「13:24」に自動実行する設定
     # GitHubは世界標準時（UTC）なので、13時から9時間引いた「4:24」を指定
     - cron: '24 4 * * *'
+    # 手動実行ボタン
+  workflow_dispatch:
 
 jobs:
   trigger_push:
