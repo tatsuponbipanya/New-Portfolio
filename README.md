@@ -11,6 +11,8 @@
 ## アプリケーションURL
 https://new-portfolio-eqo4.onrender.com/
 
+<img width="761" height="520" alt="architecture" src="https://github.com/user-attachments/assets/e8af2bfe-f600-46fe-9c8c-fd431000bd03" />
+
 ## 使用技術（テックスタック）
 
 ### バックエンド / フロントエンド
