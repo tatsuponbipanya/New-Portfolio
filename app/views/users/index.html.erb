@@ -27,7 +27,7 @@
           </td>
           
           <%# 自己紹介（長すぎると表が崩れるから truncate で1行に省略） %>
-          <td class="p-3 text-slate-600 font-medium max-w-xs truncate">
+          <td class="p-3 text-slate-600 font-medium max-w-[100px] sm:max-w-xs truncate">
             <%= user.introduction.present? ? user.introduction : "自己紹介はまだ未設定です" %>
           </td>
           

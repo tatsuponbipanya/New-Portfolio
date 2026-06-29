@@ -3,7 +3,7 @@ class WorkoutForm
   include ActiveModel::Model
   include ActiveModel::Attributes
 
-  # フォーム全体で共通する項目。attribute（データ型の指定）
+  # フォーム全体で共通する項目。attribute（データ・属性）
   attribute :user_id, :integer
   attribute :workout_date, :datetime
   attribute :menu_type, :string
@@ -12,7 +12,7 @@ class WorkoutForm
   # これを書いておくだけで、外部（コントローラーなど）から @workout_form.sets_attributes = データの塊 という風に、
   # その物置きの中にデータを放り込んだり、逆に中身を取り出したりできるようになる。
   # 今回の場合、画面から送られてくる「1セット目：80kg/5回、2セット目：75kg/6回…」というセット情報の塊を、
-  # 一時的にこの sets_attributes という名前の物置きに保管する。
+  # 一時的にこの sets_attributes(セット達のデータの集まり) という名前の物置きに保管する。
   attr_accessor :sets_attributes
 
   # バリデーション（入力チェック）
@@ -52,7 +52,8 @@ class WorkoutForm
 
   # もし途中で、データベースの保存ルール違反（ActiveRecord::RecordInvalid）が起きた場合、それをキャッチしてe（error）に代入。
   rescue ActiveRecord::RecordInvalid => e
-    # 発生したエラーメッセージを取得。:baseを指定すると、「特定の入力欄ではなく、このフォーム全体のエラーだよ！」という意味になり、特定の入力欄の横ではなく、画面の一番上とかにまとめて表示されるようになる。
+    # 発生したエラーメッセージを取得。:baseを指定すると、「特定の入力欄ではなく、このフォーム全体のエラーだよ！」という意味になり、
+    # 特定の入力欄の横ではなく、画面の一番上とかにまとめて表示されるようになる。
     errors.add(:base, e.message)
     false
   end
@@ -61,8 +62,7 @@ class WorkoutForm
   def sets_attributes_for_render
     # 1. もしエラーで戻ってきて、送信されたセットデータ（sets_attributes）が存在する場合、
     if sets_attributes.present?
-      # データの形を、ビューのループが処理しやすいように、mapとsortで配列に並び替えて送り返す。
-      # （{"0"=>{"weight"=>"83"}, "1"=>{"weight"=>"80"}} の中身だけを、上から順に取り出す）
+      # データの形を、ビューのループが処理しやすいように、mapとsortで配列に並び替えて送り返す（{"0"=>{"weight"=>"83"}, "1"=>{"weight"=>"80"}} の中身だけを、上から順に取り出す）
       # キーの"0"や"1"は文字なので、ソート出来るようにto_iで数字に変換。「_|」で一旦中身は無視。
       # ソート出来たら中身を回収。キーはもういらないので「|_」で無視。
       sets_attributes.sort_by { |key, _| key.to_i }.map { |_, value| value }
@@ -84,7 +84,7 @@ class WorkoutForm
       return
     end
 
-    # &. は、ぼっち演算子。中身が空っぽ（nil）のオブジェクトに対してメソッドを呼び出しても、プログラムがクラッシュせずに、nilを返してスルーしてくれるので、つけておいた方が安全。
+    # &. は、ぼっち演算子。中身が空っぽ（nil）のオブジェクトに対してメソッドを呼び出しても、プログラムがクラッシュせずに、nilを返してスルーしてくれる。
     # ここで入力されたデータを取り出す。
     sets_attributes&.each do |index, set_params|
       weight = set_params[:weight]
