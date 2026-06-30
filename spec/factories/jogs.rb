@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :jog do
     # ジョギングデータを作る時は、自動で靴（Shoe）も作って紐づける。
-    association :shoe 
+    association :shoe
 
     distance { 42.195 }
     date { Date.current }

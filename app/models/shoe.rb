@@ -1,6 +1,6 @@
 class Shoe < ApplicationRecord
   belongs_to :user
-  
+
   has_many :jogs, dependent: :destroy
 
   validates :name, presence: true
