@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'ユーザーログインの自動テスト', type: :system do
-  let(:user) { User.create(email: 'test@example.com', password: 'password', password_confirmation: 'password', name: 'たつマジロ') }
+  # FactoryBotからテスト用データ読み込み
+  let(:user) { create(:user) }
 
   it '正しい情報を入力すると、ログインに成功してトップページにいける' do
     # 1. ログイン画面を開く
@@ -9,7 +10,7 @@ RSpec.describe 'ユーザーログインの自動テスト', type: :system do
 
     # 2. フォームにロボットが文字を自動入力する
     fill_in 'メールアドレス', with: user.email
-    fill_in 'パスワード', with: 'password'
+    fill_in 'パスワード', with: '12345678'
 
     # 3. ログインボタンを自動でクリック
     click_button 'ログイン'

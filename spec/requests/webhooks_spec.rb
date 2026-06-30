@@ -2,13 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Stripe Webhooks', type: :request do
   it '決済完了通知が来たら、ユーザーがプレミアム会員になること' do
-    # 1. テスト用のユーザーを作る
-    user = User.create!(
-      name: 'たつマジロ',
-      email: 'tatsu@example.com',
-      password: 'password', # password_digestをパスするため
-      premium: false
-    )
+    # 1. 最初はプレミアムじゃないユーザーをFactoryから作成
+    user = create(:user, premium: false)
 
     # 2. 署名検証を突破する裏技（モック）
     # WebhooksControllerは client_reference_id を見ているので、
