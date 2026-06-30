@@ -50,4 +50,4 @@ https://new-portfolio-eqo4.onrender.com/
 * **パフォーマンス最適化**: Bullet (開発環境でのN+1問題を検知・撃退し、データベースへの発行クエリを最適化)
 * **品質保証 (E2Eテスト)**: Capybara + Selenium (Headless Chromeによる自動ブラウザ操作テスト環境を構築し、主要なユーザー動線の動作を担保)
 * **バージョン管理**: GitHub
-* **テスト / デバッグ**: RSpec, debug gem
+* **テスト / デバッグ**: RSpec, FactoryBot, debug gem
