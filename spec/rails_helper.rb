@@ -21,6 +21,8 @@ RSpec.configure do |config|
 
   config.filter_rails_from_backtrace!
 
+  config.include FactoryBot::Syntax::Methods
+
   # Linux環境で安定して動かすための設定
   config.before(:each, type: :system) do
     driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400] do |options|

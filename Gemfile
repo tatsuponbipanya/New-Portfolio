@@ -34,6 +34,9 @@ group :development, :test do
   # 日本の自社開発企業のシェアNo.1テストツール
   gem 'rspec-rails'
 
+  # テストコード用のデータを一箇所にまとめて記述出来る
+  gem 'factory_bot_rails'
+
   # 開発環境とテスト環境では SQLite を使う
   gem 'sqlite3', '>= 2.1'
 
