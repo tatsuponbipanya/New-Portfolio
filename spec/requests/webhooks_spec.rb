@@ -5,7 +5,7 @@ RSpec.describe 'Stripe Webhooks', type: :request do
     # 1. 最初はプレミアムじゃないユーザーをFactoryから作成
     user = create(:user, premium: false)
 
-    # 2. 署名検証を突破する裏技（モック）
+    # 2. 署名検証を突破する裏技（モック。 本物のプログラムや外部サービスの代わりに動いてくれる「影武者（スタントマン）」や「精巧なダミー（偽物）」）
     # WebhooksControllerは client_reference_id を見ているので、
     # さっき作ったユーザーのID（user.id）をそこにセット
     dummy_event = Stripe::Event.construct_from({

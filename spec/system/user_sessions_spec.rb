@@ -19,6 +19,6 @@ RSpec.describe 'ユーザーログインの自動テスト', type: :system do
     expect(page).to have_content 'ログインしました'
 
     # 5. 現在のURLが、ちゃんとトップページになっているか検証
-    expect(current_path).to eq root_path
+    expect(page).to have_current_path(root_path)
   end
 end
