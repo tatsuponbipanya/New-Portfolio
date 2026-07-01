@@ -198,6 +198,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // 見張り番。入力欄の中身が変わったら、候補リスト（datalist）にその数字をリアルタイム追加する
+  setsContainer.addEventListener("change", (e) => {
+    // 変更されたのが inputタグ で、かつ中身が空っぽじゃない時
+    if (e.target.tagName === "INPUT" && e.target.value !== "") {
+      const listId = e.target.getAttribute("list"); // "weight-candidates"などを取得
+      
+      if (listId) {
+        const datalist = document.getElementById(listId);
+        // もし候補リストの中に、今入力した数字がまだ存在していなければ、
+        if (datalist && !datalist.querySelector(`option[value="${e.target.value}"]`)) {
+          // 候補リストの最後に、今入力した新しい数字を追加する
+          datalist.insertAdjacentHTML("beforeend", `<option value="${e.target.value}"></option>`);
+        }
+      }
+    }
+  });
+
   // 見張り番。クリックされたらセット入力欄を追加。
   addSetBtn.addEventListener("click", () => {
     // セットの行（set-row）を集め（querySelectorAll）て、今のセット数（length）をcurrentSetsへ設定。
@@ -225,10 +242,10 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="flex items-center space-x-3">
             <span class="set-label font-bold text-slate-500 w-16">${currentSets + 1}セット</span>
             <div class="flex-1 flex items-center space-x-2">
-              <input type="number" name="workout_form[sets_attributes][${currentSets}][weight]" value="${lastWeight}" step="0.1" placeholder="重量(kg)" class="border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 w-full bg-white text-center">
+              <input type="number" name="workout_form[sets_attributes][${currentSets}][weight]" value="${lastWeight}" step="0.1" placeholder="重量(kg)" list="weight-candidates" class="border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 w-full bg-white text-center">
               <span class="text-slate-400 text-sm">kg</span>
               
-              <input type="number" name="workout_form[sets_attributes][${currentSets}][reps]" value="${lastReps}" placeholder="回数" class="border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 w-full bg-white text-center">
+              <input type="number" name="workout_form[sets_attributes][${currentSets}][reps]" value="${lastReps}" placeholder="回数" list="reps-candidates" class="border border-slate-300 rounded px-3 py-2 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 w-full bg-white text-center">
               <span class="text-slate-400 text-sm">回</span>
             </div>
           </div>

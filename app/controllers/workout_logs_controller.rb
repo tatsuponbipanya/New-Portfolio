@@ -7,6 +7,10 @@ class WorkoutLogsController < ApplicationController
       @workout_logs = current_user.workout_logs.order(workout_date: :desc)
       # ログインしているユーザーのテンプレート一覧を取得して画面に送る
       @templates = current_user.workout_templates.includes(:workout_template_sets)
+      # 最近の入力履歴を30件から取得（最初は5件までの表示）
+      recent_logs = current_user.workout_logs.order(created_at: :desc).limit(30)
+      @recent_weights = recent_logs.pluck(:weight).uniq.compact.first(5)
+      @recent_reps    = recent_logs.pluck(:reps).uniq.compact.first(5)
     else
       # ログインしてない場合は、トップページへ
       render :landing
@@ -25,6 +29,12 @@ class WorkoutLogsController < ApplicationController
     else
       @workout_logs = current_user.workout_logs.order(workout_date: :desc)
       @templates = current_user.workout_templates
+
+      # バリデーションエラーで画面が押し戻されたときも、候補を再取得
+      recent_logs = current_user.workout_logs.order(created_at: :desc).limit(30)
+      @recent_weights = recent_logs.pluck(:weight).uniq.compact.first(5)
+      @recent_reps    = recent_logs.pluck(:reps).uniq.compact.first(5)
+
       render :index, status: :unprocessable_entity
     end
   end
