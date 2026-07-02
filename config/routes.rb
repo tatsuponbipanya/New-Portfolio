@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'games/mega_punch'
   get 'up' => 'rails/health#show', as: :rails_health_check
 
   # ログイン・ログアウト
@@ -8,6 +9,9 @@ Rails.application.routes.draw do
 
   # トップページ
   root 'home#index'
+
+  # ゲーム用
+  get 'games/mega_punch', to: 'games#mega_punch'
 
   # スマホ通知用（コントローラー）
   post '/notification_subscriptions', to: 'notification_subscriptions#create'
