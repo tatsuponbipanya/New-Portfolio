@@ -74,6 +74,7 @@
         
         <div class="space-y-2 mb-6 text-sm">
           <%= link_to "👀 友達の記録を見る！", users_path, class: "block p-2.5 bg-slate-50 hover:bg-purple-50 text-slate-700 rounded-xl transition border border-slate-100" %>
+          <%= link_to "🎮️ ミニゲームで遊ぶ！", mega_punch_path, class: "block p-2.5 bg-slate-50 hover:bg-purple-50 text-slate-700 rounded-xl transition border border-slate-100" %>
           
           <%# 一般会員のときだけ、応援ボタンを表示 %>
           <% unless current_user.premium? %>
