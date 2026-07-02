@@ -101,6 +101,7 @@
           <p class="px-4 py-1 text-[10px] text-slate-400 uppercase tracking-widest">Account</p>
           <%= link_to "マイページ（プロフィール）", user_path(current_user), class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
           <%= link_to "友達の記録を見る！", users_path, class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
+          <%= link_to "ミニゲーム", mega_punch_path, class: "block px-4 py-2 text-slate-700 hover:bg-blue-50" %>
 
           <%# 一般会員のときだけ、応援ボタンを表示する %>
           <% unless current_user.premium? %>
