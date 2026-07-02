@@ -12,8 +12,10 @@ class JogsController < ApplicationController
     # 2. URLのパラメータ（?month=2026-06など）があればその月を、なければ「今月」を選択状態にする
     @selected_month = if params[:month].present?
                         Date.parse(params[:month] + '-01')
-                      else
+                      elsif @available_months.include?(Date.current.beginning_of_month)
                         Date.current.beginning_of_month
+                      else
+                        @available_months.first || Date.current.beginning_of_month
                       end
 
     # 3. 選択された月（1日〜月末）のデータだけに絞り込んでビューに渡す
