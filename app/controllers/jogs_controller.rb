@@ -6,7 +6,7 @@ class JogsController < ApplicationController
     @user = User.find(params[:user_id])
     base_jogs = Jog.includes(:shoe).where(shoe_id: @user.shoes.pluck(:id)).order(date: :desc, id: :desc)
 
-    # 1. タブに表示するための「記録が存在する月」のリストを作成（重複排除して新しい順）
+    # 1. タブに表示するための「記録が存在する月」のリストを作成（nilと重複を排除して新しい順）
     @available_months = base_jogs.pluck(:date).compact.map(&:beginning_of_month).uniq.sort.reverse
 
     # 2. URLのパラメータ（?month=2026-06など）があればその月を、なければ「今月」を選択状態にする

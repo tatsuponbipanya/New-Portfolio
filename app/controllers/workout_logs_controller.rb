@@ -94,6 +94,8 @@ class WorkoutLogsController < ApplicationController
     params.require(:workout_form).permit(
       :workout_date,
       :menu_type,
+      :template_id,
+      :update_template,
       sets_attributes: %i[id workout_type_id weight reps set_number menu_type body_part]
     )
   end
