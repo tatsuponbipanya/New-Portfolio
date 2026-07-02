@@ -152,6 +152,17 @@
     <button type="button" id="stop-timer-btn" class="hidden mt-2 text-xs bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded transition">タイマーを止める</button>
   </div>
 
+      <%# どのテンプレートを使ったかをサーバーに伝える隠しフィールド %>
+      <%= f.hidden_field :template_id, id: "workout_form_template_id", value: "" %>
+
+      <%# テンプレート選択時だけ表示される上書きチェックボックス %>
+      <div id="update-template-checkbox-wrapper" class="hidden mt-2 flex items-center gap-2 bg-amber-50 border border-amber-200 rounded px-3 py-2">
+        <%= check_box_tag "workout_form[update_template]", "1", false, id: "update_template_checkbox", class: "w-4 h-4" %>
+        <label for="update_template_checkbox" class="text-sm font-bold text-amber-800 cursor-pointer">
+          今回の重量・回数でこのテンプレートを上書きする
+        </label>
+      </div>
+
   <div>
     <%= f.submit "筋トレ終了！", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded shadow-md cursor-pointer transition duration-200" %>
   </div>

@@ -21,6 +21,11 @@ function handleTemplateChange(e) {
     const templateSelect = document.getElementById("template_select");
     const menuSelect = document.getElementById("workout_form_menu_type");
 
+    // hiddenフィールドとチェックボックスのラッパーを取得
+    const templateIdField = document.getElementById("workout_form_template_id");
+    const updateCheckboxWrapper = document.getElementById("update-template-checkbox-wrapper");
+    const updateCheckbox = document.getElementById("update_template_checkbox");
+
     // テンプレートの選択肢（optionタグ）のリストから、何番のoptionを選んだか取得
     const selectedOption = templateSelect.options[templateSelect.selectedIndex];
     // そのoptionの中身（ID番号）を取得
@@ -33,8 +38,16 @@ function handleTemplateChange(e) {
         // dispatchEventで手動イベントを発生させることで、他のセット入力欄を消すプログラムなどが同時に発動できるよう、通知を飛ばす。
         // また、{ bubbles: true } を設定することでhtml全体にイベントが届くようになり、他のセット入力欄を消すプログラムなどと連動できる。
         menuSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        // テンプレート未選択に戻したら、hiddenをクリアしてチェックボックスも隠す
+        if (templateIdField) templateIdField.value = "";
+        if (updateCheckboxWrapper) updateCheckboxWrapper.classList.add("hidden");
+        if (updateCheckbox) updateCheckbox.checked = false;
         return;
     }
+
+    // テンプレートを選んだら、IDをhiddenに入れてチェックボックスを表示
+    if (templateIdField) templateIdField.value = selectedId;
+    if (updateCheckboxWrapper) updateCheckboxWrapper.classList.remove("hidden");
 
     // 選んだテンプレート（HTMLの「data-sets」）に埋め込まれているデータを取得。
     const rawSetsData = selectedOption.dataset.sets;

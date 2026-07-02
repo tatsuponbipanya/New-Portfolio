@@ -7,6 +7,9 @@ class WorkoutForm
   attribute :user_id, :integer
   attribute :workout_date, :datetime
   attribute :menu_type, :string
+  # どのテンプレートを使ったか・上書きするかどうか用
+  attribute :template_id, :integer
+  attribute :update_template, :boolean, default: false
 
   # 各セットのデータを保持する配列。
   # これを書いておくだけで、外部（コントローラーなど）から @workout_form.sets_attributes = データの塊 という風に、
@@ -47,6 +50,8 @@ class WorkoutForm
           reps: set_params[:reps]
         )
       end
+      # チェックが入っていて、かつテンプレートを使っていた場合は上書き保存
+      update_template_sets! if update_template && template_id.present?
     end
     true # 全部のループが無事に終わったら「成功（true）」を返す
 
@@ -74,6 +79,54 @@ class WorkoutForm
   end
 
   private
+
+  # テンプレートの中身を、今回入力したセットの内容で書き換える
+  def update_template_sets!
+    template = WorkoutTemplate.find_by(id: template_id, user_id: user_id)
+    return unless template
+
+    filled_sets = filled_sets_for_template
+    existing_sets = template.workout_template_sets.order(:step_number).to_a
+
+    upsert_template_sets(template, existing_sets, filled_sets)
+    remove_extra_template_sets(existing_sets, filled_sets.size) # ← ここで filled_sets.size を渡す
+  end
+
+  # 実際に保存対象となる（重量・repsが両方入っている）セットだけを、入力順に並べて返す
+  def filled_sets_for_template
+    sets_attributes
+      .sort_by { |key, _| key.to_i }
+      .map { |_, value| value }
+      .select { |v| v[:weight].present? && v[:reps].present? }
+  end
+
+  # 既存のテンプレートセットがあれば更新、なければ新規作成する
+  def upsert_template_sets(template, existing_sets, filled_sets)
+    filled_sets.each_with_index do |set_params, index|
+      step_number = index + 1
+      template_set = existing_sets[index]
+
+      attrs = {
+        menu_type: menu_type,
+        step_number: step_number,
+        default_weight: set_params[:weight],
+        default_reps: set_params[:reps]
+      }
+
+      if template_set
+        template_set.update!(attrs)
+      else
+        template.workout_template_sets.create!(attrs)
+      end
+    end
+  end
+
+  # セット数が減っていた場合、余ったテンプレートセットを削除する
+  def remove_extra_template_sets(existing_sets, kept_count)
+    return unless existing_sets.size > kept_count
+
+    existing_sets[kept_count..].each(&:destroy!)
+  end
 
   # ja.yml の辞書を使ってエラーメッセージを出すバリデーション
   def validate_sets
