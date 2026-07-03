@@ -32,6 +32,23 @@ RSpec.describe WorkoutLog, type: :model do
       log = WorkoutLog.new(menu_type: 'チンニング')
       expect(log.body_part).to eq '背中'
     end
+
+    it 'スクワットの場合、脚が返ってくること' do
+      expect(WorkoutLog.new(menu_type: 'スクワット').body_part).to eq '脚'
+    end
+
+    it 'ショルダープレスの場合、肩が返ってくること' do
+      expect(WorkoutLog.new(menu_type: 'ショルダープレス').body_part).to eq '肩'
+    end
+
+    it 'アームカールの場合、腕が返ってくること' do
+      expect(WorkoutLog.new(menu_type: 'アームカール').body_part).to eq '腕'
+    end
+
+    # 判定にヒットしない種目名は「その他」に振り分けられること
+    it '該当しない種目名の場合、その他が返ってくること' do
+      expect(WorkoutLog.new(menu_type: 'なわとび').body_part).to eq 'その他'
+    end
   end
 
   # === 1RM計算メソッドのテスト ===
@@ -53,6 +70,11 @@ RSpec.describe WorkoutLog, type: :model do
       it 'エラーにならずに 0.0 が返ってくること' do
         log_nil = WorkoutLog.new(weight: nil, reps: nil)
         expect(log_nil.estimated_1rm).to eq 0.0
+      end
+
+      # 重量だけ・回数だけ入っている片方欠けのケースでも 0.0 を返すこと
+      it '重量だけ入っていて回数が空のときも 0.0 が返ってくること' do
+        expect(WorkoutLog.new(weight: 80.0, reps: nil).estimated_1rm).to eq 0.0
       end
     end
   end

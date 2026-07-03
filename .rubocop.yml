@@ -5,3 +5,8 @@ AllCops:
   Exclude:
     - 'db/schema.rb'
     - 'vendor/**/*'
+
+# テストは describe / context がネストして長くなるのが自然なので、行数制限の対象外にする
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
