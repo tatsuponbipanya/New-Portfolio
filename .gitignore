@@ -40,3 +40,5 @@
 # Stripe CLI バイナリ（ローカル開発用・リポジトリには含めない）
 /stripe.exe
 /stripe.exe:Zone.Identifier
+
+/CLAUDE.md
